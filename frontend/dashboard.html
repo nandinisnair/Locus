@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Locus Copilot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--page-gradient), var(--bg-secondary);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-primary);
+            padding: 0 2.5rem;
+            height: 64px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-sm);
+        }
+        .brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+        .brand span { color: var(--accent-primary); }
+        .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .header-right span {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding: 0 0.5rem;
+            border-right: 1px solid var(--border-color);
+            display: none !important;
+        }
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.5rem 0.9rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            font-size: 0.85rem;
+        }
+        .nav-btn:hover { color: var(--text-primary); background: var(--bg-secondary); }
+        .nav-btn.logout { color: var(--error-text); }
+        .nav-btn.logout:hover { background: rgba(255, 68, 68, 0.08); }
+
+        /* Container */
+        .page { max-width: 1040px; margin: 3rem auto; padding: 0 2rem; }
+        .page-header { margin-bottom: 2.5rem; }
+        .page-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .page-header p { color: var(--text-tertiary); font-size: 0.95rem; }
+
+        .status-msg {
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+            display: none;
+        }
+        .status-msg.show { display: block; }
+        .status-msg.info    { background: var(--info-bg); color: var(--info-text); border: 1px solid var(--info-border); }
+        .status-msg.error   { background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
+        .status-msg.success { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+
+        /* Profile grid */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .profile-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+        }
+        .profile-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-md);
+        }
+        .profile-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .profile-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        /* Tabs */
+        .tabs-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+        .tabs-nav {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 1.5rem;
+            gap: 0.5rem;
+        }
+        .tab-btn {
+            padding: 1rem 1.25rem;
+            border: none;
+            background: none;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-bottom: 2.5px solid transparent;
+            transition: all var(--transition-normal);
+            white-space: nowrap;
+        }
+        .tab-btn.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); }
+        .tab-btn:hover:not(.active) { color: var(--text-primary); }
+        .tab-panel { display: none; padding: 1.75rem; }
+        .tab-panel.active { display: block; }
+
+        /* Item cards */
+        .item-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .item-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all var(--transition-fast);
+        }
+        .item-card:hover { border-color: var(--border-hover); background: var(--bg-tertiary); }
+        .item-content { flex: 1; min-width: 0; }
+        .item-title { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .item-meta { font-size: 0.8rem; color: var(--text-tertiary); }
+        .item-actions { display: flex; gap: 0.5rem; margin-left: 1rem; flex-shrink: 0; }
+        .item-actions button {
+            padding: 0.4rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+        .item-actions button:hover { border-color: var(--border-hover); background: var(--bg-tertiary); }
+        .item-actions .remove {
+            color: var(--error-text);
+            border-color: var(--error-border);
+            background: var(--error-bg);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-tertiary);
+            font-size: 0.95rem;
+        }
+        .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.4; }
+
+        @media (max-width: 640px) {
+            .header { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+            .header-right { width: 100%; flex-wrap: wrap; }
+            .item-card { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .item-actions { margin-left: 0; width: 100%; }
+            .item-actions button { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="brand">Locus <span>Copilot</span></div>
+        <div class="header-right">
+            <span id="userEmail"></span>
+            <a href="index.html" class="nav-btn" onclick="navigateTo(event,'index.html')">Analysis</a>
+            <a href="about.html" class="nav-btn" onclick="navigateTo(event,'about.html')">About</a>
+            <a href="admin.html" class="nav-btn" id="adminLink" style="display:none;" onclick="navigateTo(event,'admin.html')">Admin</a>
+            <button class="nav-btn logout" onclick="logout()">Sign out</button>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="page-header">
+            <h1>Your Dashboard</h1>
+            <p>Profile, saved searches, and preferences</p>
+        </div>
+
+        <div id="statusMsg" class="status-msg"></div>
+
+        <!-- Profile -->
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="profile-label">Email</div>
+                <div class="profile-value" id="pEmail">-</div>
+            </div>
+            <div class="profile-card">
+                <div class="profile-label">Full Name</div>
+                <div class="profile-value" id="pName">-</div>
+            </div>
+            <div class="profile-card">
+                <div class="profile-label">Member Since</div>
+                <div class="profile-value" id="pCreated">-</div>
+            </div>
+            <div class="profile-card">
+                <div class="profile-label">Last Login</div>
+                <div class="profile-value" id="pLogin">-</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-card">
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="searches">Searches</button>
+                <button class="tab-btn" data-tab="preferences">Preferences</button>
+                <button class="tab-btn" data-tab="favorites">Favorites</button>
+            </div>
+            <div id="searches" class="tab-panel active">
+                <div class="item-list" id="searchesList"><div class="empty">Loading...</div></div>
+            </div>
+            <div id="preferences" class="tab-panel">
+                <div class="item-list" id="preferencesList"><div class="empty">Loading...</div></div>
+            </div>
+            <div id="favorites" class="tab-panel">
+                <div class="item-list" id="favoritesList"><div class="empty">Loading...</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = (() => {
+            const configured = (localStorage.getItem("api_base") || "").trim();
+            if (configured) return configured.replace(/\/+$/, "");
+            const host = window.location.hostname || "localhost";
+            return `${window.location.protocol}//${host}:8000/api`;
+        })();
+        const API_ROOT = API_BASE.replace(/\/api\/?$/, "");
+
+        function asNumber(value) {
+            const n = Number(value);
+            return Number.isFinite(n) ? n : null;
+        }
+
+        function formatCoord(value) {
+            const n = asNumber(value);
+            return n === null ? "-" : n.toFixed(4);
+        }
+
+        function normalizeSearchRecord(search) {
+            return {
+                ...search,
+                latitude: asNumber(search.latitude ?? search.lat),
+                longitude: asNumber(search.longitude ?? search.lon),
+                search_radius: asNumber(search.search_radius ?? search.radius),
+            };
+        }
+
+        function normalizeFavoriteRecord(favorite) {
+            return {
+                ...favorite,
+                latitude: asNumber(favorite.latitude ?? favorite.lat),
+                longitude: asNumber(favorite.longitude ?? favorite.lon),
+            };
+        }
+
+        function navigateTo(e, url) {
+            if (e) e.preventDefault();
+            document.body.classList.add('page-exit');
+            setTimeout(() => { window.location.href = url; }, 200);
+        }
+
+        function checkAuth() {
+            const token = localStorage.getItem("token");
+            if (!token) { navigateTo(null, 'login.html'); return null; }
+            const email = localStorage.getItem("email");
+            if (email) document.getElementById("userEmail").textContent = email;
+            if (localStorage.getItem("is_admin") === "true")
+                document.getElementById("adminLink").style.display = "inline-block";
+            return token;
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("email");
+            localStorage.removeItem("is_admin");
+            navigateTo(null, 'landing.html');
+        }
+
+        function headers() {
+            return { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token") };
+        }
+
+        function showStatus(msg, type) {
+            const el = document.getElementById("statusMsg");
+            el.textContent = msg;
+            el.className = "status-msg show " + type;
+            if (type !== "error") setTimeout(() => el.classList.remove("show"), 3500);
+        }
+
+        // Tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.add('active');
+                if (btn.dataset.tab === 'searches') loadSearches();
+                else if (btn.dataset.tab === 'preferences') loadPreferences();
+                else if (btn.dataset.tab === 'favorites') loadFavorites();
+            });
+        });
+
+        // Profile
+        async function loadProfile() {
+            try {
+                const res = await fetch(API_BASE + "/user/profile", { headers: headers() });
+                if (!res.ok) throw 0;
+                const d = await res.json();
+                document.getElementById("pEmail").textContent = d.email || "-";
+                document.getElementById("pName").textContent = d.full_name || "-";
+                document.getElementById("pCreated").textContent = d.created_at ? new Date(d.created_at).toLocaleDateString() : "-";
+                document.getElementById("pLogin").textContent = d.last_login ? new Date(d.last_login).toLocaleDateString() : "Never";
+            } catch { showStatus("Could not load profile", "error"); }
+        }
+
+        // Searches
+        async function loadSearches() {
+            try {
+                const res = await fetch(API_BASE + "/user/searches", { headers: headers() });
+                if (!res.ok) throw 0;
+                const d = await res.json();
+                const list = (d.searches || []).map(normalizeSearchRecord);
+                const el = document.getElementById("searchesList");
+                if (!list.length) {
+                    el.innerHTML = '<div class="empty"><div class="empty-icon">&#128269;</div>No saved searches yet</div>';
+                    return;
+                }
+                el.innerHTML = list.map(s => `
+                    <div class="item-card">
+                        <div class="item-content">
+                            <div class="item-title">${s.locality_name}</div>
+                            <div class="item-meta">${s.search_radius ?? '-'}km &middot; ${s.business_type || 'All types'} &middot; ${s.result_count ?? 0} results &middot; ${new Date(s.created_at).toLocaleDateString()}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button ${s.latitude === null || s.longitude === null || s.search_radius === null ? 'disabled' : ''} onclick="useSearch('${(s.locality_name || '').replace(/'/g, "\\'")}',${s.latitude},${s.longitude},${s.search_radius})">Re-run</button>
+                        </div>
+                    </div>
+                `).join("");
+            } catch { document.getElementById("searchesList").innerHTML = '<div class="empty">Failed to load</div>'; }
+        }
+
+        function useSearch(name, lat, lon, r) {
+            localStorage.setItem("resumeSearch", JSON.stringify({ locality: name, lat, lon, radius: r }));
+            navigateTo(null, 'index.html');
+        }
+
+        // Preferences
+        async function loadPreferences() {
+            try {
+                const res = await fetch(API_BASE + "/user/preferences", { headers: headers() });
+                if (!res.ok) throw 0;
+                const d = await res.json();
+                const list = d.preferences || [];
+                const el = document.getElementById("preferencesList");
+                if (!list.length) {
+                    el.innerHTML = '<div class="empty"><div class="empty-icon">&#9889;</div>No saved preferences</div>';
+                    return;
+                }
+                el.innerHTML = list.map(p => `
+                    <div class="item-card">
+                        <div class="item-content">
+                            <div class="item-title">${p.preference_name}</div>
+                            <div class="item-meta">Afford ${(p.weights.rent*100).toFixed(0)}% &middot; Crowd ${(p.weights.crowd*100).toFixed(0)}% &middot; Comp ${(p.weights.competition*100).toFixed(0)}% &middot; Access ${(p.weights.accessibility*100).toFixed(0)}%</div>
+                            ${p.description ? `<div class="item-meta" style="margin-top:0.2rem">${p.description}</div>` : ''}
+                        </div>
+                        <div class="item-actions">
+                            <button onclick='applyPref(${JSON.stringify(JSON.stringify(p.weights))})'>Apply</button>
+                        </div>
+                    </div>
+                `).join("");
+            } catch { document.getElementById("preferencesList").innerHTML = '<div class="empty">Failed to load</div>'; }
+        }
+
+        function applyPref(weightsJson) {
+            localStorage.setItem("resumePreference", weightsJson);
+            showStatus("Preference saved. Apply it on the Analysis page.", "success");
+        }
+
+        // Favorites
+        async function loadFavorites() {
+            try {
+                const res = await fetch(API_BASE + "/user/favorites", { headers: headers() });
+                if (!res.ok) throw 0;
+                const d = await res.json();
+                const list = (d.favorites || []).map(normalizeFavoriteRecord);
+                const el = document.getElementById("favoritesList");
+                if (!list.length) {
+                    el.innerHTML = '<div class="empty"><div class="empty-icon">&#10084;</div>No favorites yet</div>';
+                    return;
+                }
+                el.innerHTML = list.map(f => `
+                    <div class="item-card">
+                        <div class="item-content">
+                            <div class="item-title">${f.location_name}</div>
+                            <div class="item-meta">${formatCoord(f.latitude)}, ${formatCoord(f.longitude)}${f.notes ? ' &middot; ' + f.notes : ''}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button ${f.latitude === null || f.longitude === null ? 'disabled' : ''} onclick="window.open('https://www.openstreetmap.org/?mlat=${f.latitude}&mlon=${f.longitude}&zoom=15','_blank')">Map</button>
+                            <button class="remove" onclick="removeFav(${f.id})">Remove</button>
+                        </div>
+                    </div>
+                `).join("");
+            } catch { document.getElementById("favoritesList").innerHTML = '<div class="empty">Failed to load</div>'; }
+        }
+
+        async function removeFav(id) {
+            if (!confirm("Remove this favorite?")) return;
+            try {
+                const res = await fetch(API_BASE + "/user/favorites/" + id, { method: "DELETE", headers: headers() });
+                if (res.ok) { showStatus("Removed", "success"); loadFavorites(); }
+                else showStatus("Failed to remove", "error");
+            } catch { showStatus("Error", "error"); }
+        }
+
+        // Init
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') document.body.classList.add('dark-theme');
+        })();
+
+        window.addEventListener("load", () => {
+            if (checkAuth()) { loadProfile(); loadSearches(); }
+        });
+    </script>
+</body>
+</html>

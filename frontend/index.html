@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locus Copilot - Location Intelligence</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="theme.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--page-gradient), var(--bg-secondary);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+        
+        /* ====== HEADER ====== */
+        .header {
+            background: var(--bg-primary);
+            padding: 0 2.5rem;
+            height: 64px;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        
+        .header-left h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.4px;
+            margin: 0;
+        }
+        
+        .header-left h1 span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .header-right span {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding: 0 0.5rem;
+            border-right: 1px solid var(--border-color);
+            display: none !important;
+        }
+        
+        .header-right a, .header-right button {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.5rem 0.9rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            font-size: 0.85rem;
+        }
+        
+        .header-right a:hover, .header-right button:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+        
+        .logout-btn { color: var(--error-text) !important; }
+        .logout-btn:hover { background: rgba(255, 68, 68, 0.08) !important; }
+        
+        /* ====== LAYOUT ====== */
+        .container {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 1.25rem;
+            max-width: 1560px;
+            margin: 1.25rem auto;
+            padding: 0 1.5rem;
+            min-height: calc(100vh - 85px);
+        }
+        
+        @media (max-width: 1024px) {
+            .container { grid-template-columns: 1fr; }
+        }
+        
+        /* ====== CONTROL PANEL ====== */
+        .control-panel {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            height: fit-content;
+            max-height: calc(100vh - 85px);
+            overflow-y: auto;
+            position: sticky;
+            top: 75px;
+        }
+        
+        .control-panel h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.25rem;
+        }
+        
+        .section {
+            margin-bottom: 1.75rem;
+        }
+        
+        .section-label {
+            font-weight: 600;
+            color: var(--text-tertiary);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section-label::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        
+        label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 0.75rem 0.875rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-family: inherit;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        /* Searchable Dropdown */
+        .searchable-select {
+            position: relative;
+            width: 100%;
+            margin-bottom: 0.4rem;
+        }
+        .searchable-select .search-input {
+            width: 100%;
+            padding: 0.6rem 2.2rem 0.6rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-family: inherit;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            box-sizing: border-box;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .searchable-select .search-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(91,127,110,0.1);
+        }
+        .searchable-select .search-input::placeholder { color: var(--text-muted, var(--text-tertiary)); }
+        .searchable-select .dd-arrow {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-tertiary);
+            font-size: 0.65rem;
+        }
+        .searchable-select .dd-list {
+            display: none;
+            position: absolute;
+            top: calc(100% - 1px);
+            left: 0;
+            right: 0;
+            max-height: 240px;
+            overflow-y: auto;
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-primary);
+            border-top: none;
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            z-index: 999;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        .searchable-select.open .dd-list { display: block; }
+        .searchable-select.open .search-input {
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            border-color: var(--accent-primary);
+        }
+        .searchable-select .dd-item {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.83rem;
+            color: var(--text-primary);
+            transition: background 0.12s ease, color 0.12s ease;
+        }
+        .searchable-select .dd-item:hover,
+        .searchable-select .dd-item.highlighted {
+            background: var(--accent-primary);
+            color: #fff;
+        }
+        .searchable-select .dd-item.selected {
+            font-weight: 600;
+            background: rgba(91,127,110,0.08);
+        }
+        .searchable-select .dd-empty {
+            padding: 0.75rem;
+            color: var(--text-tertiary);
+            font-size: 0.82rem;
+            text-align: center;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(91,127,110,0.1);
+        }
+        
+        /* ====== CRITERIA / WEIGHTS ====== */
+        .criteria-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .criterion {
+            padding: 0.875rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            transition: border-color var(--transition-fast), background var(--transition-fast);
+        }
+        
+        .criterion:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-tertiary);
+        }
+        
+        .criterion-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        
+        .criterion-value {
+            background: var(--accent-gradient);
+            color: white;
+            font-weight: 700;
+            font-size: 0.73rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-sm);
+            min-width: 42px;
+            text-align: center;
+        }
+        
+        .criterion-description {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.65rem;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--border-color);
+            border-radius: 2px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            border: 2.5px solid var(--bg-primary);
+            transition: transform 0.15s ease;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2.5px solid var(--bg-primary);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        }
+        
+        /* ====== PRESETS ====== */
+        .presets {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.65rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .preset-btn {
+            padding: 0.6rem 0.75rem;
+            background: var(--bg-primary);
+            color: var(--accent-primary);
+            border: 1.5px solid var(--accent-primary);
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .preset-btn:hover {
+            background: var(--accent-primary);
+            color: #fff;
+        }
+        
+        /* ====== BUTTONS ====== */
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        
+        .button-group-full {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-top: 0.75rem;
+        }
+        
+        .button-group-full .btn-secondary {
+            flex: 1;
+            min-width: 0;
+            padding: 0.6rem 0.5rem;
+            font-size: 0.73rem;
+        }
+        
+        button {
+            padding: 0.65rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px rgba(91,127,110,0.3);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-hover);
+        }
+        
+        .btn-tertiary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-tertiary:hover {
+            background: var(--bg-secondary);
+            border-color: var(--border-hover);
+        }
+        
+        /* ====== RESULTS PANEL ====== */
+        .results-panel {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .map-container {
+            flex: 0 0 auto;
+            height: 480px;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            overflow: hidden;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* ====== TOOLBAR ====== */
+        .results-toolbar {
+            padding: 0.875rem 1.5rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .toolbar-left, .toolbar-right {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .result-count {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .quality-badge {
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 0.25rem 0.55rem;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+        }
+
+        .quality-badge.high {
+            color: var(--success-text);
+            border-color: var(--success-border);
+            background: var(--success-bg);
+        }
+
+        .quality-badge.medium {
+            color: var(--info-text);
+            border-color: var(--info-border);
+            background: var(--info-bg);
+        }
+
+        .quality-badge.low {
+            color: var(--error-text);
+            border-color: var(--error-border);
+            background: var(--error-bg);
+        }
+        
+        .sort-filter select {
+            padding: 0.35rem 0.6rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        
+        /* ====== RESULTS LIST ====== */
+        .results-list {
+            flex: 0 0 auto;
+            max-height: 420px;
+            overflow-y: auto;
+            padding: 1.25rem 1.5rem;
+            background: var(--bg-secondary);
+        }
+        
+        .results-list.empty {
+            text-align: center;
+            color: var(--text-tertiary);
+            padding: 3rem 1.5rem;
+            font-size: 0.92rem;
+        }
+        
+        .result-item {
+            padding: 1.1rem 1.25rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: transform 0.32s cubic-bezier(0.4,0,0.2,1),
+                        box-shadow 0.32s cubic-bezier(0.4,0,0.2,1),
+                        border-color 0.32s cubic-bezier(0.4,0,0.2,1),
+                        background 0.32s cubic-bezier(0.4,0,0.2,1);
+            opacity: 0;
+            animation: resultSlideIn 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
+        }
+        
+        .result-item:nth-child(1) { animation-delay: 0.02s; }
+        .result-item:nth-child(2) { animation-delay: 0.06s; }
+        .result-item:nth-child(3) { animation-delay: 0.10s; }
+        .result-item:nth-child(4) { animation-delay: 0.14s; }
+        .result-item:nth-child(5) { animation-delay: 0.18s; }
+        .result-item:nth-child(6) { animation-delay: 0.22s; }
+        .result-item:nth-child(7) { animation-delay: 0.26s; }
+        .result-item:nth-child(8) { animation-delay: 0.30s; }
+        .result-item:nth-child(9) { animation-delay: 0.34s; }
+        .result-item:nth-child(10) { animation-delay: 0.38s; }
+        
+        @keyframes resultSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-item:hover {
+            border-color: var(--accent-secondary);
+            box-shadow: 0 4px 20px var(--glow-accent);
+            transform: translateY(-2px);
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            gap: 1rem;
+        }
+        
+        .result-title-section { flex: 1; }
+        
+        .result-locality {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+            line-height: 1.35;
+        }
+        
+        .result-area {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+        
+        .result-distance {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-top: 0.1rem;
+        }
+        
+        .result-score {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            text-align: center;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        /* ====== CRITERIA BARS ====== */
+        .criteria-bars {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .criterion-bar {
+            font-size: 0.7rem;
+        }
+        
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.2rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .bar-fill {
+            height: 3px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .bar-value {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+        }
+        
+        /* ====== CONSTRAINT DETAILS ====== */
+        .constraint-details {
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            padding: 0.6rem 0.75rem;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-color);
+            font-size: 0.72rem;
+        }
+        
+        .constraint-row {
+            display: grid;
+            grid-template-columns: 100px 1fr 56px;
+            gap: 0.6rem;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+        
+        .constraint-row:last-child { border-bottom: none; }
+        
+        .constraint-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .constraint-value {
+            color: var(--text-tertiary);
+        }
+        
+        .constraint-score {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.2rem 0.45rem;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.68rem;
+        }
+
+        .explain-panel {
+            margin-top: 0.55rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 0.65rem 0.7rem;
+        }
+
+        .explain-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent-primary);
+            margin-bottom: 0.35rem;
+        }
+
+        .explain-text {
+            font-size: 0.76rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+            margin-bottom: 0.45rem;
+        }
+
+        .driver-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .driver-chip {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            padding: 0.18rem 0.5rem;
+            border-radius: 999px;
+        }
+        
+        /* ====== RESULT ACTIONS ====== */
+        .result-actions {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.6rem;
+        }
+        
+        .result-actions button {
+            flex: 1;
+            padding: 0.35rem 0.5rem;
+            font-size: 0.68rem;
+            text-transform: none;
+            letter-spacing: 0;
+            font-weight: 600;
+        }
+        
+        .result-item.selected {
+            border-color: var(--accent-primary);
+            background: var(--accent-light);
+        }
+        
+        /* ====== STATUS MESSAGES ====== */
+        .status-message {
+            padding: 0.65rem 0.85rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.75rem;
+            font-size: 0.82rem;
+            display: none;
+            animation: resultSlideIn 0.3s ease;
+        }
+        
+        .status-message.show { display: block; }
+        .status-message.info { background: var(--info-bg); color: var(--info-text); border: 1px solid var(--info-border); }
+        .status-message.error { background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
+        .status-message.success { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+        
+        /* ====== COMPARISON MODAL ====== */
+        .comparison-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+        }
+        
+        .comparison-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .onboarding-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 10, 14, 0.56);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1400;
+            padding: 1rem;
+        }
+
+        .onboarding-modal.active {
+            display: flex;
+            animation: fadeIn 0.28s ease;
+        }
+
+        .onboarding-content {
+            width: min(560px, 100%);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.1rem 1.2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .onboarding-content h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .onboarding-content p {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 0.8rem;
+        }
+
+        .onboarding-list {
+            display: grid;
+            gap: 0.45rem;
+            margin-bottom: 0.95rem;
+        }
+
+        .onboarding-item {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            padding: 0.55rem 0.6rem;
+        }
+
+        .onboarding-actions {
+            display: flex;
+            gap: 0.45rem;
+            justify-content: flex-end;
+        }
+
+        .onboarding-actions button {
+            min-width: 124px;
+        }
+        
+        .comparison-content {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            max-width: 88vw;
+            max-height: 88vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: scaleIn 0.25s cubic-bezier(0.4,0,0.2,1);
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+        }
+        
+        .comparison-card {
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            transition: border-color var(--transition-fast);
+        }
+        
+        .comparison-card:hover {
+            border-color: var(--accent-secondary);
+        }
+        
+        .comparison-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .comparison-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+        
+        .comparison-metric:last-child { border-bottom: none; }
+        
+        .comparison-metric-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .comparison-metric-value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .coord-info {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            line-height: 1.6;
+        }
+
+        .result-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ===== ML / AI Feature Styles ===== */
+
+        .ml-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #0d6e8a 0%, #1c8ea5 100%);
+            color: #fff;
+            vertical-align: middle;
+        }
+
+        .smart-weight-btn {
+            width: 100%;
+            margin-top: 0.5rem;
+            padding: 0.55rem 0.8rem;
+            background: linear-gradient(135deg, #0d6e8a 0%, #1c8ea5 100%);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+        }
+
+        .smart-weight-btn:hover {
+            box-shadow: 0 8px 22px rgba(13, 110, 138, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .smart-weight-btn:active {
+            transform: translateY(0);
+        }
+
+        .smart-weight-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .zone-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            margin-top: 0.4rem;
+            cursor: pointer;
+            transition: border-color var(--transition-fast), background var(--transition-fast);
+        }
+
+        .zone-toggle:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-tertiary);
+        }
+
+        .zone-toggle-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .toggle-switch {
+            width: 36px;
+            height: 19px;
+            background: var(--border-color);
+            border-radius: 10px;
+            position: relative;
+            transition: background 0.25s cubic-bezier(0.4,0,0.2,1);
+            flex-shrink: 0;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #0d6e8a 0%, #1c8ea5 100%);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 15px;
+            height: 15px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(17px);
+        }
+
+        .zone-legend {
+            display: none;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-top: 0.5rem;
+            padding: 0.65rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+        }
+
+        .zone-legend.show {
+            display: flex;
+            animation: resultSlideIn 0.3s ease;
+        }
+
+        .zone-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.74rem;
+        }
+
+        .zone-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .zone-legend-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .zone-legend-count {
+            color: var(--text-tertiary);
+            font-size: 0.68rem;
+            margin-left: auto;
+        }
+
+        .ai-recs-panel {
+            margin-top: 0.6rem;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            display: none;
+        }
+
+        .ai-recs-panel.show {
+            display: block;
+            animation: resultSlideIn 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .ai-recs-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-recs-header h3 {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .ai-rec-card {
+            padding: 0.6rem 0.7rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 0.35rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .ai-rec-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-1px);
+        }
+
+        .ai-rec-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.2rem;
+        }
+
+        .ai-rec-name {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .ai-rec-score {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            background: linear-gradient(135deg, #0d6e8a 0%, #1c8ea5 100%);
+            color: #fff;
+        }
+
+        .ai-rec-reason {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            line-height: 1.35;
+        }
+
+        .ai-rec-empty {
+            text-align: center;
+            padding: 1rem 0.5rem;
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+        }
+
+        .ai-rec-empty-icon {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+            opacity: 0.4;
+        }
+
+        .smart-weight-toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: linear-gradient(135deg, #0d6e8a 0%, #1c8ea5 100%);
+            color: #fff;
+            padding: 0.65rem 1.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 10px 28px rgba(13, 110, 138, 0.35);
+            z-index: 9999;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+        }
+
+        .smart-weight-toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Pulse animation for selected red marker */
+        @keyframes pulse-ring {
+            0%   { box-shadow: 0 0 0 3px rgba(231,76,60,0.4), 0 2px 8px rgba(0,0,0,0.35); }
+            70%  { box-shadow: 0 0 0 12px rgba(231,76,60,0), 0 2px 8px rgba(0,0,0,0.1); }
+            100% { box-shadow: 0 0 0 3px rgba(231,76,60,0.4), 0 2px 8px rgba(0,0,0,0.35); }
+        }
+        .selected-location-icon { background: transparent !important; border: none !important; }
+        .result-marker-icon { background: transparent !important; border: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <h1>Locus Copilot</h1>
+        </div>
+        <div class="header-right">
+            <span id="userEmail"></span>
+            <a href="dashboard.html" id="dashboardLink">Dashboard</a>
+            <a href="about.html">About</a>
+            <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+            <button class="theme-toggle-btn" id="themeToggle" title="Toggle dark mode"><span class="knob"></span></button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Control Panel (Left) -->
+        <div class="control-panel">
+            <h2>Location Analysis</h2>
+            
+            <div id="statusMessage" class="status-message"></div>
+            
+            <div class="section">
+                <div class="section-label">Step 1: Select Location</div>
+                <label>Locality / Area</label>
+                <select id="localitySelect" style="display:none;">
+                    <option value="">-- Select locality --</option>
+                </select>
+                <div class="searchable-select" id="localitySearchable">
+                    <input type="text" class="search-input" id="localitySearchInput" placeholder="Search locality..." autocomplete="off">
+                    <span class="dd-arrow">▼</span>
+                    <div class="dd-list" id="localityDropdownList"></div>
+                </div>
+                <div class="coord-info">
+                    <strong>Coordinates:</strong><br>
+                    Lat: <span id="latDisplay">-</span><br>
+                    Lon: <span id="lonDisplay">-</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-label">Step 1B: Business Type</div>
+                <label>Business Category</label>
+                <select id="businessTypeSelect" onchange="onBusinessTypeChange()">
+                    <option value="">-- All Types --</option>
+                    <option value="medical">Medical</option>
+                    <option value="restaurant">Restaurant/Cafe</option>
+                    <option value="laptop">Laptop/Electronics</option>
+                    <option value="mobile">Mobile Services</option>
+                    <option value="automobile">Automobile Repairs</option>
+                    <option value="stationary">Stationary/Books</option>
+                </select>
+                <button class="smart-weight-btn" id="smartWeightBtn" onclick="applySmartWeights()" disabled>
+                    AHP Decision Weights
+                    <span class="ml-badge" style="background:#2563eb;">AHP</span>
+                </button>
+            </div>
+            
+            <div class="section">
+                <div class="section-label">Step 2: Search Radius</div>
+                <label>Radius (km)</label>
+                <input type="number" id="radiusInput" value="5" min="1" max="15" step="1" onchange="onRadiusChange()" oninput="onRadiusChange()">
+            </div>
+            
+            <div class="section">
+                <div class="section-label">Step 3: Profile</div>
+                <div class="presets">
+                    <button class="preset-btn" onclick="applyPreset('balanced')">Balanced</button>
+                    <button class="preset-btn" onclick="applyPreset('budget')">Budget</button>
+                    <button class="preset-btn" onclick="applyPreset('foot_traffic')">Traffic</button>
+                    <button class="preset-btn" onclick="applyPreset('low_competition')">Low Comp</button>
+                </div>
+                <button class="btn-tertiary" onclick="loadPreferences()" style="width:100%; margin-top: 0.4rem; font-size: 0.72rem; padding: 0.45rem;">Load Saved Preferences</button>
+            </div>
+            
+            <div class="section">
+                <div class="section-label">Step 4: Weights</div>
+                <div class="criteria-group">
+                    <div class="criterion">
+                        <div class="criterion-name">
+                            Affordability
+                            <span class="criterion-value" id="rentValue">25%</span>
+                        </div>
+                        <div class="criterion-description">Lower rent = higher score</div>
+                        <input type="range" id="rentWeight" value="25" min="0" max="100" step="5" onchange="updateValues()">
+                    </div>
+                    
+                    <div class="criterion">
+                        <div class="criterion-name">
+                            Crowd Density
+                            <span class="criterion-value" id="crowdValue">25%</span>
+                        </div>
+                        <div class="criterion-description">More footfall = higher score</div>
+                        <input type="range" id="crowdWeight" value="25" min="0" max="100" step="5" onchange="updateValues()">
+                    </div>
+                    
+                    <div class="criterion">
+                        <div class="criterion-name">
+                            Competition
+                            <span class="criterion-value" id="competitionValue">25%</span>
+                        </div>
+                        <div class="criterion-description">Use-case based: market strength or low same-type competition</div>
+                        <input type="range" id="competitionWeight" value="25" min="0" max="100" step="5" onchange="updateValues()">
+                    </div>
+                    
+                    <div class="criterion">
+                        <div class="criterion-name">
+                            Accessibility
+                            <span class="criterion-value" id="accessibilityValue">25%</span>
+                        </div>
+                        <div class="criterion-description">More transit = higher score</div>
+                        <input type="range" id="accessibilityWeight" value="25" min="0" max="100" step="5" onchange="updateValues()">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-primary" id="analyzeBtn" onclick="analyzeLocation()">Analyze</button>
+                <button class="btn-secondary" onclick="resetWeights()">Reset</button>
+            </div>
+            <div class="button-group-full">
+                <button class="btn-secondary" onclick="saveSearch()">Save Search</button>
+                <button class="btn-secondary" onclick="exportResults()">Export CSV</button>
+                <button class="btn-secondary" onclick="getRecommendations()">Get Recommendations</button>
+            </div>
+
+            <!-- Central Place Hierarchy Insights -->
+            <div class="section" style="margin-top: 1rem;">
+                <div class="section-label">Central Place Spatial Hierarchy <span class="ml-badge" style="background:#7c3aed;">Theory</span></div>
+                <div class="zone-toggle" onclick="toggleZoneOverlay()">
+                    <span class="zone-toggle-label">Show Christaller Hierarchy</span>
+                    <div class="toggle-switch" id="zoneToggle"></div>
+                </div>
+                <div class="zone-legend" id="zoneLegend"></div>
+            </div>
+
+            <!-- MAUT Utility Recommendations -->
+            <div class="section">
+                <div class="section-label">Decision Utility Picks <span class="ml-badge" style="background:#059669;">MAUT</span></div>
+                <button class="smart-weight-btn" onclick="loadAIRecommendations()" style="background: linear-gradient(135deg, #059669 0%, #34d399 100%); font-size: 0.75rem;">
+                    Multi-Attribute Utility Picks
+                </button>
+                <div class="ai-recs-panel" id="aiRecsPanel">
+                    <div class="ai-recs-header">
+                        <h3>Utility Theory Recommendations</h3>
+                    </div>
+                    <div id="aiRecsList"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Panel (Right) -->
+        <div class="results-panel">
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+            
+            <!-- Results Toolbar -->
+            <div class="results-toolbar">
+                <div class="toolbar-left">
+                    <span id="resultCount" class="result-count">0 Results</span>
+                </div>
+                <div class="toolbar-right">
+                    <div class="sort-filter">
+                        <select id="sortBy" onchange="sortResults()">
+                            <option value="score">Sort by Score</option>
+                            <option value="distance">Sort by Distance</option>
+                            <option value="rent">Sort by Rent</option>
+                            <option value="crowd">Sort by Crowd</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results List -->
+            <div class="results-list" id="resultsList">
+                <div class="empty">Select a locality and click Analyze</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comparison Modal -->
+    <div id="comparisonModal" class="comparison-modal" onclick="closeComparison(event)">
+        <div class="comparison-content" onclick="event.stopPropagation()">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-family: Poppins; color: var(--text-primary);">Compare Locations</h2>
+                <button class="btn-secondary" onclick="closeComparison()" style="padding: 0.4rem 0.8rem;">Close</button>
+            </div>
+            <div class="comparison-grid" id="comparisonGrid"></div>
+        </div>
+    </div>
+    
+    <!-- Smart Weight Toast -->
+    <div class="smart-weight-toast" id="smartWeightToast"></div>
+
+    <!-- First-Time Onboarding -->
+    <div class="onboarding-modal" id="onboardingModal" onclick="closeOnboarding(false)">
+        <div class="onboarding-content" onclick="event.stopPropagation()">
+            <h3>Welcome to Locus Copilot</h3>
+            <p>Quick setup to get high-quality recommendations in under a minute.</p>
+            <div class="onboarding-list">
+                <div class="onboarding-item">1. Pick a locality and search radius for your target zone.</div>
+                <div class="onboarding-item">2. Select business type to apply type-aware ranking behavior.</div>
+                <div class="onboarding-item">3. Click Analyze and review the "Why this rank" panel under each result.</div>
+            </div>
+            <div class="onboarding-actions">
+                <button class="btn-secondary" onclick="closeOnboarding(false)">Skip for now</button>
+                <button class="btn-primary" onclick="startGuidedSetup()">Start setup</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Leaflet Map Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    
+    <script>
+        const API_BASE = (() => {
+            const configured = (localStorage.getItem("api_base") || "").trim();
+            if (configured) return configured.replace(/\/+$/, "");
+            const host = window.location.hostname || "localhost";
+            return `${window.location.protocol}//${host}:8000/api`;
+        })();
+
+        // ==================== THEME MANAGEMENT ====================
+        
+        function initTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            applyTheme(theme);
+            
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+        
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        function toggleTheme() {
+            const isDark = document.body.classList.contains('dark-theme');
+            applyTheme(isDark ? 'light' : 'dark');
+        }
+        
+        // ==================== AUTHENTICATION ====================
+        
+        function checkAuth() {
+            const token = localStorage.getItem("token");
+            const email = localStorage.getItem("email");
+            const isAdmin = localStorage.getItem("is_admin") === "true";
+            
+            if (!token) {
+                window.location.href = "login.html";
+                return null;
+            }
+            
+            if (email) {
+                document.getElementById("userEmail").textContent = email;
+            }
+            
+            if (isAdmin) {
+                document.getElementById("adminLink").style.display = "block";
+            }
+            
+            return token;
+        }
+        
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("email");
+            localStorage.removeItem("is_admin");
+            document.body.classList.add('page-exit');
+            setTimeout(() => { window.location.href = 'landing.html'; }, 250);
+        }
+        
+        function getAuthHeaders() {
+            const token = localStorage.getItem("token");
+            return {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            };
+        }
+        
+        // ==================== GLOBAL VARIABLES ====================
+        
+        let localities = [];
+        let map = null;
+        let currentResults = [];
+        let selectedComparison = [];
+        let zoneOverlayVisible = false;
+        let zoneCircles = [];
+        let smartWeightsCache = null;
+        let selectedMarker = null;
+        let radiusCircle = null;
+        let resultMarkers = [];
+        let ddHighlightIndex = -1;
+        let currentDataQuality = null;
+
+        // ==================== MAP INITIALIZATION ====================
+
+        function ensureMap(lat, lon, zoom) {
+            lat = lat || 13.0827;
+            lon = lon || 80.2707;
+            zoom = zoom || 12;
+            if (!map) {
+                map = L.map('map').setView([lat, lon], zoom);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+            }
+            return map;
+        }
+
+        function clearResultMarkers() {
+            resultMarkers.forEach(m => { if (map) map.removeLayer(m); });
+            resultMarkers = [];
+        }
+        
+        // ==================== LOCALITY LOADING ====================
+        
+        async function loadLocalities() {
+            try {
+                const response = await fetch(`${API_BASE}/localities`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                localities = data.localities || [];
+                
+                if (localities.length === 0) {
+                    console.warn("No localities returned from API");
+                    showStatus("No localities available. Please try again.", "error");
+                    return;
+                }
+                
+                const select = document.getElementById("localitySelect");
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
+                
+                localities.forEach(locality => {
+                    const option = document.createElement("option");
+                    option.value = locality.name;
+                    const displayName = locality.locality_name 
+                        ? `${locality.locality_name} (${locality.name})`
+                        : locality.name;
+                    option.textContent = displayName;
+                    select.appendChild(option);
+                });
+                
+                console.log(`Successfully loaded ${localities.length} localities`);
+                select.addEventListener("change", updateCoordinates);
+                initSearchableDropdown();
+
+                const resumeSearchRaw = localStorage.getItem("resumeSearch");
+                if (resumeSearchRaw) {
+                    try {
+                        const resume = JSON.parse(resumeSearchRaw);
+                        const match = localities.find(l => l.name === resume.locality || l.locality_name === resume.locality);
+                        if (match) {
+                            select.value = match.name;
+                            document.getElementById("localitySearchInput").value = match.locality_name || match.name;
+                            if (Number.isFinite(Number(resume.radius))) {
+                                document.getElementById("radiusInput").value = Number(resume.radius);
+                            }
+                            updateCoordinates();
+                        }
+                    } catch (e) {
+                        console.warn("Invalid resume search payload", e);
+                    }
+                    localStorage.removeItem("resumeSearch");
+                }
+            } catch (error) {
+                console.error("Error loading localities:", error);
+                showStatus("Error: Could not load localities. " + error.message, "error");
+            }
+        }
+        
+        function updateCoordinates() {
+            const localityName = document.getElementById("localitySelect").value;
+            if (!localityName) {
+                document.getElementById("latDisplay").textContent = "-";
+                document.getElementById("lonDisplay").textContent = "-";
+                clearSelectionOverlay();
+                return;
+            }
+            
+            const locality = localities.find(l => l.name === localityName);
+            if (locality) {
+                // Use actual coordinates (from real-world data) if available, fall back to grid center
+                const lat = locality.actual_lat || locality.lat || locality.center_lat;
+                const lon = locality.actual_lon || locality.lon || locality.center_lon;
+                document.getElementById("latDisplay").textContent = lat.toFixed(4);
+                document.getElementById("lonDisplay").textContent = lon.toFixed(4);
+                showSelectionOverlay(lat, lon);
+            }
+        }
+
+        // ==================== SEARCHABLE DROPDOWN ====================
+
+        function initSearchableDropdown() {
+            const wrapper = document.getElementById('localitySearchable');
+            const input = document.getElementById('localitySearchInput');
+            const list = document.getElementById('localityDropdownList');
+
+            function renderList(filter = '') {
+                const lower = filter.toLowerCase();
+                const filtered = localities.filter(l => {
+                    const n = (l.locality_name || l.name || '').toLowerCase();
+                    return n.includes(lower);
+                });
+
+                if (filtered.length === 0) {
+                    list.innerHTML = '<div class="dd-empty">No matching localities</div>';
+                    ddHighlightIndex = -1;
+                    return;
+                }
+
+                list.innerHTML = filtered.map((l, i) => {
+                    const display = l.locality_name ? `${l.locality_name}` : l.name;
+                    const isSelected = document.getElementById('localitySelect').value === l.name;
+                    return `<div class="dd-item${isSelected ? ' selected' : ''}" data-value="${l.name}" data-index="${i}">${display}</div>`;
+                }).join('');
+                ddHighlightIndex = -1;
+
+                list.querySelectorAll('.dd-item').forEach(item => {
+                    item.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        selectLocality(item.dataset.value, item.textContent);
+                    });
+                });
+            }
+
+            function selectLocality(value, label) {
+                document.getElementById('localitySelect').value = value;
+                input.value = label;
+                wrapper.classList.remove('open');
+                updateCoordinates();
+                onBusinessTypeChange();
+            }
+
+            input.addEventListener('focus', () => {
+                wrapper.classList.add('open');
+                renderList(input.value);
+            });
+
+            input.addEventListener('input', () => {
+                wrapper.classList.add('open');
+                renderList(input.value);
+            });
+
+            input.addEventListener('blur', () => {
+                setTimeout(() => wrapper.classList.remove('open'), 180);
+            });
+
+            input.addEventListener('keydown', (e) => {
+                const items = list.querySelectorAll('.dd-item');
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    ddHighlightIndex = Math.min(ddHighlightIndex + 1, items.length - 1);
+                    updateHighlight(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    ddHighlightIndex = Math.max(ddHighlightIndex - 1, 0);
+                    updateHighlight(items);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (ddHighlightIndex >= 0 && items[ddHighlightIndex]) {
+                        const item = items[ddHighlightIndex];
+                        selectLocality(item.dataset.value, item.textContent);
+                    }
+                } else if (e.key === 'Escape') {
+                    wrapper.classList.remove('open');
+                    input.blur();
+                }
+            });
+
+            function updateHighlight(items) {
+                items.forEach((el, i) => {
+                    el.classList.toggle('highlighted', i === ddHighlightIndex);
+                });
+                if (items[ddHighlightIndex]) {
+                    items[ddHighlightIndex].scrollIntoView({ block: 'nearest' });
+                }
+            }
+        }
+
+        // ==================== SELECTED LOCATION OVERLAY ====================
+
+        function clearSelectionOverlay() {
+            if (selectedMarker && map) {
+                map.removeLayer(selectedMarker);
+                selectedMarker = null;
+            }
+            if (radiusCircle && map) {
+                map.removeLayer(radiusCircle);
+                radiusCircle = null;
+            }
+        }
+
+        function showSelectionOverlay(lat, lon) {
+            ensureMap(lat, lon, 13);
+
+            clearSelectionOverlay();
+
+            // Red pulsing marker for selected locality
+            const redIcon = L.divIcon({
+                className: 'selected-location-icon',
+                html: `<div style="
+                    width: 18px; height: 18px;
+                    background: #e74c3c;
+                    border: 3px solid #fff;
+                    border-radius: 50%;
+                    box-shadow: 0 0 0 3px #e74c3c44, 0 2px 8px rgba(0,0,0,0.35);
+                    animation: pulse-ring 1.8s ease-out infinite;
+                "></div>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+            selectedMarker = L.marker([lat, lon], { icon: redIcon, zIndexOffset: 1000 })
+                .bindPopup(`<strong>Selected Location</strong><br>Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}`)
+                .addTo(map);
+
+            // Hatched / textured radius circle
+            const radiusKm = parseFloat(document.getElementById('radiusInput').value) || 5;
+            radiusCircle = L.circle([lat, lon], {
+                radius: radiusKm * 1000,
+                color: '#e74c3c',
+                weight: 2,
+                opacity: 0.7,
+                fillColor: '#e74c3c',
+                fillOpacity: 0.07,
+                dashArray: '8, 6',
+                className: 'radius-circle-hatch'
+            }).addTo(map);
+
+            // Also add cross-hatch SVG pattern overlay
+            addHatchPattern();
+
+            map.setView([lat, lon], 13);
+        }
+
+        function addHatchPattern() {
+            // Add SVG hatch pattern to the map's SVG container
+            const svgEl = map.getRenderer(radiusCircle)?._container;
+            if (!svgEl) return;
+            let defs = svgEl.querySelector('defs');
+            if (!defs) {
+                defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                svgEl.insertBefore(defs, svgEl.firstChild);
+            }
+            if (!defs.querySelector('#hatchPattern')) {
+                const pattern = document.createElementNS('http://www.w3.org/2000/svg', 'pattern');
+                pattern.setAttribute('id', 'hatchPattern');
+                pattern.setAttribute('patternUnits', 'userSpaceOnUse');
+                pattern.setAttribute('width', '10');
+                pattern.setAttribute('height', '10');
+                pattern.setAttribute('patternTransform', 'rotate(45)');
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', '0'); line.setAttribute('y1', '0');
+                line.setAttribute('x2', '0'); line.setAttribute('y2', '10');
+                line.setAttribute('stroke', '#e74c3c');
+                line.setAttribute('stroke-width', '1.5');
+                line.setAttribute('stroke-opacity', '0.18');
+                pattern.appendChild(line);
+                defs.appendChild(pattern);
+            }
+            // Apply pattern fill to the circle path
+            setTimeout(() => {
+                const paths = svgEl.querySelectorAll('path.radius-circle-hatch');
+                paths.forEach(p => {
+                    p.style.fill = 'url(#hatchPattern)';
+                });
+            }, 100);
+        }
+
+        function onRadiusChange() {
+            const localityName = document.getElementById('localitySelect').value;
+            if (!localityName) return;
+            const locality = localities.find(l => l.name === localityName);
+            if (locality) {
+                const lat = locality.actual_lat || locality.lat || locality.center_lat;
+                const lon = locality.actual_lon || locality.lon || locality.center_lon;
+                showSelectionOverlay(lat, lon);
+            }
+        }
+        
+        // ==================== WEIGHT MANAGEMENT ====================
+        
+        function updateValues() {
+            const rent = parseInt(document.getElementById("rentWeight").value);
+            const crowd = parseInt(document.getElementById("crowdWeight").value);
+            const competition = parseInt(document.getElementById("competitionWeight").value);
+            const accessibility = parseInt(document.getElementById("accessibilityWeight").value);
+            
+            document.getElementById("rentValue").textContent = rent + "%";
+            document.getElementById("crowdValue").textContent = crowd + "%";
+            document.getElementById("competitionValue").textContent = competition + "%";
+            document.getElementById("accessibilityValue").textContent = accessibility + "%";
+        }
+        
+        function resetWeights() {
+            document.getElementById("rentWeight").value = 25;
+            document.getElementById("crowdWeight").value = 25;
+            document.getElementById("competitionWeight").value = 25;
+            document.getElementById("accessibilityWeight").value = 25;
+            updateValues();
+        }
+        
+        function applyPreset(preset) {
+            const presets = {
+                balanced: { rent: 25, crowd: 25, competition: 25, accessibility: 25 },
+                budget: { rent: 40, crowd: 20, competition: 20, accessibility: 20 },
+                foot_traffic: { rent: 15, crowd: 50, competition: 20, accessibility: 15 },
+                low_competition: { rent: 20, crowd: 25, competition: 50, accessibility: 5 }
+            };
+            
+            if (presets[preset]) {
+                const p = presets[preset];
+                document.getElementById("rentWeight").value = p.rent;
+                document.getElementById("crowdWeight").value = p.crowd;
+                document.getElementById("competitionWeight").value = p.competition;
+                document.getElementById("accessibilityWeight").value = p.accessibility;
+                updateValues();
+            }
+        }
+        
+        // ==================== STATUS MESSAGES ====================
+        
+        function showStatus(message, type = "info") {
+            const statusEl = document.getElementById("statusMessage");
+            statusEl.textContent = message;
+            statusEl.className = `status-message show ${type}`;
+            
+            if (type !== "error") {
+                setTimeout(() => statusEl.classList.remove("show"), 4000);
+            }
+        }
+        
+        // ==================== ANALYSIS & RESULTS ====================
+        
+        async function analyzeLocation() {
+            const token = checkAuth();
+            if (!token) return;
+            
+            const localityName = document.getElementById("localitySelect").value;
+            if (!localityName) {
+                showStatus("Please select a locality", "error");
+                return;
+            }
+            
+            const locality = localities.find(l => l.name === localityName);
+            if (!locality) {
+                showStatus("Locality not found", "error");
+                return;
+            }
+            
+            const businessType = document.getElementById("businessTypeSelect").value || null;
+            const radius = parseFloat(document.getElementById("radiusInput").value);
+            
+            const rent = parseInt(document.getElementById("rentWeight").value) / 100;
+            const crowd = parseInt(document.getElementById("crowdWeight").value) / 100;
+            const competition = parseInt(document.getElementById("competitionWeight").value) / 100;
+            const accessibility = parseInt(document.getElementById("accessibilityWeight").value) / 100;
+            
+            const btn = document.getElementById("analyzeBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Analyzing...';
+            
+            try {
+                const lat = locality.actual_lat || locality.lat || locality.center_lat;
+                const lon = locality.actual_lon || locality.lon || locality.center_lon;
+                
+                const requestBody = {
+                    reference_lat: lat,
+                    reference_lon: lon,
+                    search_radius_km: radius,
+                    weights: {
+                        rent: rent,
+                        crowd: crowd,
+                        competition: competition,
+                        accessibility: accessibility
+                    },
+                    business_type: businessType,
+                    limit: 10
+                };
+                
+                const response = await fetch(`${API_BASE}/analyze`, {
+                    method: "POST",
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(requestBody)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || "Analysis failed");
+                }
+                
+                const data = await response.json();
+                currentResults = data.results || [];
+                currentDataQuality = data.data_quality || null;
+                selectedComparison = [];
+                
+                displayResults(currentResults);
+                showStatus(`Found ${currentResults.length} suitable locations!`, "success");
+            } catch (error) {
+                console.error("Analysis error:", error);
+                showStatus(`Error: ${error.message}`, "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "Analyze";
+            }
+        }
+        
+        function displayResults(results) {
+            const resultsList = document.getElementById("resultsList");
+            const resultCount = document.getElementById("resultCount");
+            
+            if (!results || results.length === 0) {
+                resultsList.innerHTML = '<div class="empty">No results found. Adjust your criteria.</div>';
+                resultCount.textContent = "0 Results";
+                return;
+            }
+            
+            resultCount.textContent = `${results.length} Results`;
+            
+            resultsList.innerHTML = results.map((result, index) => {
+                const breakdown = result.breakdown || {};
+                const rentScore = (breakdown.rent * 100) || 0;
+                const crowdScore = (breakdown.crowd * 100) || 0;
+                const competitionScore = (breakdown.competition * 100) || 0;
+                const accessibilityScore = (breakdown.accessibility * 100) || 0;
+                const explainabilityHtml = buildExplainabilityHtml(result, breakdown);
+                
+                return `
+                <div class="result-item ${selectedComparison.includes(index) ? 'selected' : ''}" id="result-${index}" onclick="toggleComparison(${index})">
+                    <div class="result-header">
+                        <div class="result-title-section">
+                            <div class="result-locality">${result.locality_name || 'Location ' + result.id}</div>
+                            <div class="result-distance">${(result.distance_km || 0).toFixed(2)} km away</div>
+                        </div>
+                        <div class="result-score">${result.score_percent || 0}%</div>
+                    </div>
+                    
+                    <div class="criteria-bars">
+                        <div class="criterion-bar">
+                            <div class="bar-label"><span>Afford</span><span>${rentScore.toFixed(0)}%</span></div>
+                            <div class="bar-fill"><div class="bar-value" style="width: ${rentScore}%"></div></div>
+                        </div>
+                        <div class="criterion-bar">
+                            <div class="bar-label"><span>Crowd</span><span>${crowdScore.toFixed(0)}%</span></div>
+                            <div class="bar-fill"><div class="bar-value" style="width: ${crowdScore}%"></div></div>
+                        </div>
+                        <div class="criterion-bar">
+                            <div class="bar-label"><span>Comp</span><span>${competitionScore.toFixed(0)}%</span></div>
+                            <div class="bar-fill"><div class="bar-value" style="width: ${competitionScore}%"></div></div>
+                        </div>
+                        <div class="criterion-bar">
+                            <div class="bar-label"><span>Access</span><span>${accessibilityScore.toFixed(0)}%</span></div>
+                            <div class="bar-fill"><div class="bar-value" style="width: ${accessibilityScore}%"></div></div>
+                        </div>
+                    </div>
+                    
+                    ${explainabilityHtml}
+                    
+                    <div class="result-actions">
+                        <button class="btn-secondary" onclick="event.stopPropagation(); addFavorite(${index})">Favorite</button>
+                        <button class="btn-secondary" onclick="event.stopPropagation(); viewMap(${index})">View Map</button>
+                    </div>
+                </div>
+            `}).join("");
+            
+            // Initialize map
+            ensureMap();
+            
+            // Clear old result markers (keep selection overlay + radius)
+            clearResultMarkers();
+            
+            // Re-add selected location overlay if a locality is selected
+            const selLocality = document.getElementById('localitySelect').value;
+            if (selLocality) {
+                const selLoc = localities.find(l => l.name === selLocality);
+                if (selLoc) {
+                    const sLat = selLoc.actual_lat || selLoc.lat || selLoc.center_lat;
+                    const sLon = selLoc.actual_lon || selLoc.lon || selLoc.center_lon;
+                    showSelectionOverlay(sLat, sLon);
+                }
+            }
+            
+            // Add numbered markers for results using display coordinates (actual when available)
+            results.forEach((result, idx) => {
+                const rank = idx + 1;
+                const markerLat = result.display_lat || result.lat;
+                const markerLon = result.display_lon || result.lon;
+                const icon = L.divIcon({
+                    className: 'result-marker-icon',
+                    html: `<div style="
+                        width: 28px; height: 28px;
+                        background: #27ae60;
+                        border: 2px solid #fff;
+                        border-radius: 50%;
+                        display: flex; align-items: center; justify-content: center;
+                        color: #fff; font-weight: 700; font-size: 13px;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+                    ">${rank}</div>`,
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                });
+                const marker = L.marker([markerLat, markerLon], { icon: icon })
+                    .bindPopup(`
+                        <div style="min-width:160px">
+                            <strong>#${rank} ${result.locality_name || result.name}</strong><br>
+                            <span style="color:#27ae60;font-weight:600">Score: ${result.score_percent}%</span><br>
+                            <small>${(result.distance_km || 0).toFixed(2)} km away</small><br>
+                            <small>Rent: ₹${result.features?.rent || 'N/A'}/sqft</small>
+                        </div>
+                    `)
+                    .addTo(map);
+                resultMarkers.push(marker);
+            });
+            
+            // Fit bounds to include both selected location and results
+            if (results.length > 0) {
+                const allPoints = results.map(r => [r.display_lat || r.lat, r.display_lon || r.lon]);
+                if (selectedMarker) {
+                    allPoints.push(selectedMarker.getLatLng());
+                }
+                const bounds = L.latLngBounds(allPoints);
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        function getDriverLabel(key) {
+            const labels = {
+                rent: "Affordability",
+                crowd: "Crowd Potential",
+                competition: "Market Signal",
+                accessibility: "Accessibility"
+            };
+            return labels[key] || key;
+        }
+
+        function getStrategyHint(label) {
+            const text = String(label || "").toLowerCase();
+            if (text.includes("opportunity")) {
+                return "This mode boosts areas with lower direct same-type competition.";
+            }
+            if (text.includes("demand")) {
+                return "This mode favors active zones where demand signals are stronger.";
+            }
+            return "This mode balances demand strength and competition pressure.";
+        }
+
+        function buildExplainabilityHtml(result, breakdown) {
+            const ranked = Object.entries({
+                rent: Number(breakdown.rent || 0),
+                crowd: Number(breakdown.crowd || 0),
+                competition: Number(breakdown.competition || 0),
+                accessibility: Number(breakdown.accessibility || 0)
+            }).sort((a, b) => b[1] - a[1]);
+
+            const topDrivers = ranked.slice(0, 2).map(([key, score]) => ({
+                key,
+                score: Math.round(score * 100)
+            }));
+            const chips = topDrivers
+                .map(d => `<span class="driver-chip">${getDriverLabel(d.key)} ${d.score}%</span>`)
+                .join("");
+
+            const competitionLabel = result?.constraint_details?.competition?.label || "Market Fit";
+            const strategyHint = getStrategyHint(competitionLabel);
+
+            const topsisInfo = result.topsis ? `
+                <div style="margin-top: 6px; font-size: 0.72rem; color: #1e3a8a; background: #eff6ff; padding: 4px 8px; border-radius: 4px; border-left: 3px solid #3b82f6;">
+                    <strong>TOPSIS Closeness:</strong> ${result.topsis.ideal_closeness_percent}% &bull; 
+                    <strong>Huff Catchment:</strong> ${result.huff_gravity ? result.huff_gravity.catchment_probability_percent + '%' : 'N/A'} &bull;
+                    <strong>Decay:</strong> ${result.huff_gravity ? result.huff_gravity.exponential_distance_decay + '%' : 'N/A'}
+                </div>
+            ` : '';
+
+            return `
+                <div class="explain-panel">
+                    <div class="explain-title">Why this rank (Decision Science)</div>
+                    <div class="explain-text">
+                        Top score drivers are ${topDrivers.map(d => `${getDriverLabel(d.key)} (${d.score}%)`).join(" and ")}. ${strategyHint}
+                    </div>
+                    <div class="driver-chips">${chips}<span class="driver-chip">${competitionLabel}</span></div>
+                    ${topsisInfo}
+                </div>
+            `;
+        }
+
+        function showOnboardingIfNeeded() {
+            if (localStorage.getItem("onboarding_done_v1") === "1") {
+                return;
+            }
+            const modal = document.getElementById("onboardingModal");
+            if (modal) {
+                modal.classList.add("active");
+            }
+        }
+
+        function closeOnboarding(markDone = true) {
+            const modal = document.getElementById("onboardingModal");
+            if (modal) {
+                modal.classList.remove("active");
+            }
+            if (markDone) {
+                localStorage.setItem("onboarding_done_v1", "1");
+            }
+        }
+
+        function startGuidedSetup() {
+            closeOnboarding(true);
+            const searchInput = document.getElementById("localitySearchInput");
+            if (searchInput) {
+                searchInput.focus();
+            }
+            showStatus("Start by searching locality, then pick business type and click Analyze.", "info");
+        }
+        
+        function viewMap(index) {
+            const result = currentResults[index];
+            if (map && result) {
+                map.setView([result.lat, result.lon], 14);
+                if (resultMarkers[index]) {
+                    resultMarkers[index].openPopup();
+                }
+            }
+        }
+        
+        // ==================== SORTING ====================
+        
+        function sortResults() {
+            const sortBy = document.getElementById("sortBy").value;
+            
+            const sorted = [...currentResults].sort((a, b) => {
+                switch(sortBy) {
+                    case "distance":
+                        return (a.distance_km || 0) - (b.distance_km || 0);
+                    case "rent":
+                        return ((b.breakdown?.rent || 0) * 100) - ((a.breakdown?.rent || 0) * 100);
+                    case "crowd":
+                        return ((b.breakdown?.crowd || 0) * 100) - ((a.breakdown?.crowd || 0) * 100);
+                    default:
+                        return (b.score_percent || 0) - (a.score_percent || 0);
+                }
+            });
+            
+            displayResults(sorted);
+        }
+        
+        // ==================== COMPARISON ====================
+        
+        function toggleComparison(index) {
+            if (selectedComparison.includes(index)) {
+                selectedComparison = selectedComparison.filter(i => i !== index);
+                document.getElementById(`result-${index}`)?.classList.remove("selected");
+            } else {
+                if (selectedComparison.length < 5) {
+                    selectedComparison.push(index);
+                    document.getElementById(`result-${index}`)?.classList.add("selected");
+                } else {
+                    showStatus("Max 5 locations to compare", "error");
+                    return;
+                }
+            }
+        }
+        
+        function showComparison() {
+            if (selectedComparison.length === 0) {
+                showStatus("Select at least 1 location to compare", "error");
+                return;
+            }
+            
+            const modal = document.getElementById("comparisonModal");
+            const grid = document.getElementById("comparisonGrid");
+            
+            const selected = selectedComparison.map(i => currentResults[i]);
+            
+            grid.innerHTML = selected.map(result => {
+                const breakdown = result.breakdown || {};
+                return `
+                <div class="comparison-card">
+                    <h3>${result.name || result.locality_name}</h3>
+                    <div class="comparison-metric">
+                        <span class="comparison-metric-label">Overall Score</span>
+                        <span class="comparison-metric-value">${result.score_percent}%</span>
+                    </div>
+                    <div class="comparison-metric">
+                        <span class="comparison-metric-label">Distance</span>
+                        <span class="comparison-metric-value">${(result.distance_km || 0).toFixed(2)} km</span>
+                    </div>
+                    <div class="comparison-metric">
+                        <span class="comparison-metric-label">Affordability</span>
+                        <span class="comparison-metric-value">${((breakdown.rent || 0) * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="comparison-metric">
+                        <span class="comparison-metric-label">Crowd Density</span>
+                        <span class="comparison-metric-value">${((breakdown.crowd || 0) * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="comparison-metric">
+                        <span class="comparison-metric-label">Competition</span>
+                        <span class="comparison-metric-value">${((breakdown.competition || 0) * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="comparison-metric">
+                        <span class="comparison-metric-label">Accessibility</span>
+                        <span class="comparison-metric-value">${((breakdown.accessibility || 0) * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="comparison-metric">
+                        <span class="comparison-metric-label">Rent</span>
+                        <span class="comparison-metric-value">₹${result.features?.rent || "N/A"}</span>
+                    </div>
+                </div>
+            `}).join("");
+            
+            modal.classList.add("active");
+        }
+        
+        function closeComparison(e) {
+            if (e && e.target.id !== "comparisonModal") return;
+            document.getElementById("comparisonModal").classList.remove("active");
+        }
+        
+        // ==================== CSV EXPORT ====================
+        
+        function exportResults() {
+            if (currentResults.length === 0) {
+                showStatus("Analyze a location first", "error");
+                return;
+            }
+            
+            const headers = ["Name", "Score", "Distance (km)", "Affordability", "Crowd", "Competition", "Accessibility", "Rent"];
+            const rows = currentResults.map(r => {
+                const breakdown = r.breakdown || {};
+                return [
+                    r.name || r.locality_name,
+                    r.score_percent || 0,
+                    (r.distance_km || 0).toFixed(2),
+                    ((breakdown.rent || 0) * 100).toFixed(0),
+                    ((breakdown.crowd || 0) * 100).toFixed(0),
+                    ((breakdown.competition || 0) * 100).toFixed(0),
+                    ((breakdown.accessibility || 0) * 100).toFixed(0),
+                    r.features?.rent || "N/A"
+                ];
+            });
+            
+            const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `locus-results-${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            
+            showStatus("Results exported as CSV", "success");
+        }
+        
+        // ==================== RECOMMENDATIONS ====================
+        
+        async function getRecommendations() {
+            if (currentResults.length === 0) {
+                showStatus("Analyze a location first", "error");
+                return;
+            }
+            
+            try {
+                const weights = {
+                    rent: parseInt(document.getElementById("rentWeight").value) / 100,
+                    crowd: parseInt(document.getElementById("crowdWeight").value) / 100,
+                    competition: parseInt(document.getElementById("competitionWeight").value) / 100,
+                    accessibility: parseInt(document.getElementById("accessibilityWeight").value) / 100
+                };
+                
+                const scored = currentResults.map((result, idx) => {
+                    const breakdown = result.breakdown || {};
+                    const totalW = weights.rent + weights.crowd + weights.competition + weights.accessibility || 1;
+                    return {
+                        ...result,
+                        customScore: (
+                            (breakdown.rent || 0) * weights.rent +
+                            (breakdown.crowd || 0) * weights.crowd +
+                            (breakdown.competition || 0) * weights.competition +
+                            (breakdown.accessibility || 0) * weights.accessibility
+                        ) / totalW * 100,
+                        idx
+                    };
+                });
+                
+                const top3 = scored.sort((a, b) => b.customScore - a.customScore).slice(0, 3);
+                selectedComparison = top3.map(r => r.idx);
+                
+                top3.forEach((r) => {
+                    document.getElementById(`result-${r.idx}`)?.classList.add("selected");
+                });
+                
+                showComparison();
+                showStatus(`Top ${top3.length} recommendations shown!`, "success");
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, "error");
+            }
+        }
+        
+        // ==================== USER PREFERENCES ====================
+        
+        async function saveSearch() {
+            const token = checkAuth();
+            if (!token) return;
+            
+            const locality = document.getElementById("localitySelect").value;
+            if (!locality) {
+                showStatus("Analyze a location first", "error");
+                return;
+            }
+            
+            try {
+                const selectedLocality = localities.find(l => l.name === locality);
+                const lat = selectedLocality.actual_lat || selectedLocality.lat || selectedLocality.center_lat;
+                const lon = selectedLocality.actual_lon || selectedLocality.lon || selectedLocality.center_lon;
+                
+                const response = await fetch(`${API_BASE}/user/save-search`, {
+                    method: "POST",
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({
+                        locality_name: locality,
+                        latitude: lat,
+                        longitude: lon,
+                        search_radius: parseFloat(document.getElementById("radiusInput").value),
+                        business_type: document.getElementById("businessTypeSelect").value || null,
+                        weights: {
+                            rent: parseInt(document.getElementById("rentWeight").value) / 100,
+                            crowd: parseInt(document.getElementById("crowdWeight").value) / 100,
+                            competition: parseInt(document.getElementById("competitionWeight").value) / 100,
+                            accessibility: parseInt(document.getElementById("accessibilityWeight").value) / 100
+                        },
+                        result_count: currentResults.length
+                    })
+                });
+                
+                if (response.ok) {
+                    showStatus("Search saved successfully!", "success");
+                } else {
+                    showStatus("Failed to save search", "error");
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, "error");
+            }
+        }
+        
+        async function loadPreferences() {
+            const token = checkAuth();
+            if (!token) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/user/preferences`, {
+                    headers: getAuthHeaders()
+                });
+                
+                if (!response.ok) throw new Error("Load failed");
+                
+                const data = await response.json();
+                const prefs = data.preferences || [];
+                
+                if (prefs.length === 0) {
+                    showStatus("No saved preferences yet", "info");
+                    return;
+                }
+                
+                const choice = prompt("Select profile:\n\n" + prefs.map((p, i) => `${i+1}. ${p.preference_name}`).join("\n"));
+                if (!choice) return;
+                
+                const idx = parseInt(choice) - 1;
+                if (prefs[idx] && prefs[idx].weights) {
+                    const w = prefs[idx].weights;
+                    document.getElementById("rentWeight").value = (w.rent * 100).toFixed(0);
+                    document.getElementById("crowdWeight").value = (w.crowd * 100).toFixed(0);
+                    document.getElementById("competitionWeight").value = (w.competition * 100).toFixed(0);
+                    document.getElementById("accessibilityWeight").value = (w.accessibility * 100).toFixed(0);
+                    updateValues();
+                    showStatus(`Loaded "${prefs[idx].preference_name}"`, "success");
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, "error");
+            }
+        }
+        
+        async function addFavorite(index) {
+            const token = checkAuth();
+            if (!token) return;
+            
+            const result = currentResults[index];
+            if (!result) return;
+            
+            try {
+                const notes = prompt("Add notes (optional):", `${result.name || result.locality_name} - Score: ${result.score_percent}%`);
+                
+                const response = await fetch(`${API_BASE}/user/favorites`, {
+                    method: "POST",
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({
+                        location_id: `${result.lat}_${result.lon}`,
+                        location_name: result.name || result.locality_name,
+                        latitude: result.lat,
+                        longitude: result.lon,
+                        notes: notes || ""
+                    })
+                });
+                
+                if (response.ok) {
+                    showStatus("Added to favorites!", "success");
+                } else {
+                    throw new Error("Failed to add");
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, "error");
+            }
+        }
+        
+        // ==================== INITIALIZATION ====================
+        
+        window.addEventListener("load", () => {
+            initTheme();
+            const token = checkAuth();
+            if (token) {
+                loadLocalities();
+                preloadSmartWeights();
+                setTimeout(showOnboardingIfNeeded, 280);
+                const savedPreference = localStorage.getItem("resumePreference");
+                if (savedPreference) {
+                    try {
+                        const w = JSON.parse(savedPreference);
+                        document.getElementById("rentWeight").value = Math.round((w.rent || 0.25) * 100);
+                        document.getElementById("crowdWeight").value = Math.round((w.crowd || 0.25) * 100);
+                        document.getElementById("competitionWeight").value = Math.round((w.competition || 0.25) * 100);
+                        document.getElementById("accessibilityWeight").value = Math.round((w.accessibility || 0.25) * 100);
+                        updateValues();
+                    } catch (e) {
+                        console.warn("Invalid saved preference payload", e);
+                    }
+                    localStorage.removeItem("resumePreference");
+                }
+            }
+        });
+
+
+        // ==================== ML: SMART WEIGHTS ====================
+
+        async function preloadSmartWeights() {
+            try {
+                const res = await fetch(`${API_BASE}/ml/smart-weights`);
+                if (res.ok) {
+                    const data = await res.json();
+                    smartWeightsCache = data.recommendations || {};
+                    console.log("Smart weights preloaded");
+                }
+            } catch (e) {
+                console.warn("Smart weights not available", e);
+            }
+        }
+
+        function onBusinessTypeChange() {
+            const bt = document.getElementById("businessTypeSelect").value;
+            const btn = document.getElementById("smartWeightBtn");
+            btn.disabled = !bt;
+        }
+
+        async function applySmartWeights() {
+            const bt = document.getElementById("businessTypeSelect").value;
+            if (!bt) {
+                showStatus("Select a business type first", "error");
+                return;
+            }
+
+            let rec = null;
+
+            // Try cache first
+            if (smartWeightsCache && smartWeightsCache[bt]) {
+                rec = smartWeightsCache[bt];
+            } else {
+                try {
+                    const res = await fetch(`${API_BASE}/ml/smart-weights/${bt}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        rec = { weights: data.recommended_weights, explanation: data.explanation };
+                    }
+                } catch (e) {
+                    showStatus("Could not load AI weights", "error");
+                    return;
+                }
+            }
+
+            if (!rec || !rec.weights) {
+                showStatus("No AI recommendation for this type", "error");
+                return;
+            }
+
+            const w = rec.weights;
+            document.getElementById("rentWeight").value = Math.round((w.rent || 0.25) * 100);
+            document.getElementById("crowdWeight").value = Math.round((w.crowd || 0.25) * 100);
+            document.getElementById("competitionWeight").value = Math.round((w.competition || 0.25) * 100);
+            document.getElementById("accessibilityWeight").value = Math.round((w.accessibility || 0.25) * 100);
+            updateValues();
+
+            // Show toast
+            const toast = document.getElementById("smartWeightToast");
+            toast.textContent = `${rec.explanation || 'AI weights applied for ' + bt}`;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 3500);
+        }
+
+
+        // ==================== ML: ZONE CLUSTERS ====================
+
+        async function toggleZoneOverlay() {
+            const toggle = document.getElementById("zoneToggle");
+            const legend = document.getElementById("zoneLegend");
+
+            if (zoneOverlayVisible) {
+                // Turn off
+                zoneOverlayVisible = false;
+                toggle.classList.remove("active");
+                legend.classList.remove("show");
+                clearZoneOverlay();
+                return;
+            }
+
+            // Turn on
+            zoneOverlayVisible = true;
+            toggle.classList.add("active");
+
+            ensureMap();
+
+            try {
+                const [mapRes, clusterRes] = await Promise.all([
+                    fetch(`${API_BASE}/ml/clusters/map`),
+                    fetch(`${API_BASE}/ml/clusters`)
+                ]);
+
+                if (!mapRes.ok || !clusterRes.ok) throw new Error("ML API unavailable");
+
+                const mapData = await mapRes.json();
+                const clusterData = await clusterRes.json();
+
+                // Draw circles
+                clearZoneOverlay();
+                (mapData.localities || []).forEach(loc => {
+                    if (!loc.lat || !loc.lon) return;
+                    const circle = L.circleMarker([loc.lat, loc.lon], {
+                        radius: 6,
+                        fillColor: loc.cluster_color || "#95a5a6",
+                        color: "#fff",
+                        weight: 1,
+                        fillOpacity: 0.55,
+                    }).bindTooltip(
+                        `<strong>${loc.locality_name || loc.name}</strong><br>${loc.cluster_icon || ''} ${loc.cluster_name || 'Unknown'}`,
+                        { direction: "top", offset: [0, -6] }
+                    ).addTo(map);
+                    zoneCircles.push(circle);
+                });
+
+                // Build legend
+                const clusters = clusterData.clusters || {};
+                legend.innerHTML = Object.values(clusters).map(c => `
+                    <div class="zone-legend-item">
+                        <span class="zone-dot" style="background:${c.color}"></span>
+                        <span class="zone-legend-name">${c.icon || ''} ${c.name}</span>
+                        <span class="zone-legend-count">${c.locality_count} areas</span>
+                    </div>
+                `).join("");
+                legend.classList.add("show");
+
+            } catch (e) {
+                console.error("Zone overlay error", e);
+                showStatus("Could not load zone data", "error");
+                zoneOverlayVisible = false;
+                toggle.classList.remove("active");
+            }
+        }
+
+        function clearZoneOverlay() {
+            zoneCircles.forEach(c => { if (map) map.removeLayer(c); });
+            zoneCircles = [];
+        }
+
+
+        // ==================== ML: PERSONALIZED RECOMMENDATIONS ====================
+
+        async function loadAIRecommendations() {
+            const token = checkAuth();
+            if (!token) return;
+
+            const panel = document.getElementById("aiRecsPanel");
+            const list = document.getElementById("aiRecsList");
+            panel.classList.add("show");
+            list.innerHTML = '<div class="ai-rec-empty"><div class="loading-spinner"></div><br>Analyzing your profile...</div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/ml/personalized?limit=5`, {
+                    headers: getAuthHeaders()
+                });
+
+                if (!res.ok) throw new Error("Failed to load");
+                const data = await res.json();
+                const recs = data.recommendations || [];
+
+                if (recs.length === 0) {
+                    list.innerHTML = `
+                        <div class="ai-rec-empty">
+                            <div class="ai-rec-empty-icon">--</div>
+                            ${data.message || 'Analyze a few locations and save favorites to get personalized picks!'}
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = recs.map(r => `
+                    <div class="ai-rec-card" onclick="viewAIRec(${r.lat}, ${r.lon}, '${(r.locality_name || r.name || '').replace(/'/g, "\\'")}")">
+                        <div class="ai-rec-top">
+                            <span class="ai-rec-name">${r.locality_name || r.name}</span>
+                            <span class="ai-rec-score">${r.match_score}% match</span>
+                        </div>
+                        <div class="ai-rec-reason">${r.reason || 'Similar to your preferences'}</div>
+                    </div>
+                `).join("");
+
+            } catch (e) {
+                list.innerHTML = '<div class="ai-rec-empty">Could not load recommendations</div>';
+                console.error(e);
+            }
+        }
+
+        function viewAIRec(lat, lon, name) {
+            ensureMap(lat, lon, 14);
+            map.setView([lat, lon], 14);
+            const icon = L.divIcon({
+                className: 'result-marker-icon',
+                html: `<div style="
+                    width: 28px; height: 28px;
+                    background: #8b5cf6;
+                    border: 2px solid #fff;
+                    border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                    color: #fff; font-weight: 700; font-size: 13px;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+                ">*</div>`,
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+            });
+            const m = L.marker([lat, lon], { icon: icon })
+                .bindPopup(`<strong>${name}</strong><br>AI Recommended`)
+                .addTo(map)
+                .openPopup();
+            resultMarkers.push(m);
+        }
+
+        // Subtle cursor-reactive lift on interactive cards (very gentle, barely noticeable)
+        function initCardHover() {
+            document.querySelectorAll('.criterion, .ai-rec-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
+                    card.style.transform = `perspective(800px) rotateX(${-y * 1.5}deg) rotateY(${x * 1.5}deg)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                    card.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+                    setTimeout(() => { card.style.transition = ''; }, 400);
+                });
+            });
+        }
+        initCardHover();
+
+        // Smooth number counter on result scores
+        function animateScore(el, target) {
+            const start = performance.now();
+            const dur = 600;
+            function tick(now) {
+                const t = Math.min((now - start) / dur, 1);
+                el.textContent = Math.round((1 - Math.pow(1 - t, 3)) * target) + '%';
+                if (t < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+    </script>
+</body>
+</html>

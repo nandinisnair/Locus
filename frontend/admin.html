@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Locus Copilot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--page-gradient), var(--bg-secondary);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-primary);
+            padding: 0 2.5rem;
+            height: 64px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-sm);
+        }
+        .brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+        .brand span { color: var(--accent-primary); }
+        .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.5rem 0.9rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            font-size: 0.85rem;
+        }
+        .nav-btn:hover { color: var(--text-primary); background: var(--bg-secondary); }
+        .nav-btn.logout { color: var(--error-text); }
+        .nav-btn.logout:hover { background: rgba(255, 68, 68, 0.08); }
+
+        /* Container */
+        .page { max-width: 1040px; margin: 3rem auto; padding: 0 2rem; }
+        .page-header { margin-bottom: 2.5rem; }
+        .page-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .page-header p { color: var(--text-tertiary); font-size: 0.95rem; }
+
+        .status-msg {
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+            display: none;
+        }
+        .status-msg.show { display: block; }
+        .status-msg.info    { background: var(--info-bg); color: var(--info-text); border: 1px solid var(--info-border); }
+        .status-msg.error   { background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
+        .status-msg.success { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .stat-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-tertiary);
+            font-weight: 600;
+        }
+        .stat-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .stat-hint { font-size: 0.75rem; color: var(--text-tertiary); }
+
+        /* Users table section */
+        .section-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .section-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .refresh-btn {
+            padding: 0.3rem 0.65rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .refresh-btn:hover { background: var(--bg-tertiary); border-color: var(--border-hover); }
+
+        .table-wrap { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead th {
+            background: var(--bg-secondary);
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+        tbody td {
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+        tbody tr:hover { background: var(--bg-tertiary); }
+        tbody tr:last-child td { border-bottom: none; }
+
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .badge.admin { background: rgba(91,127,110,0.12); color: var(--accent-primary); }
+        .badge.user  { background: var(--bg-tertiary); color: var(--text-tertiary); }
+        .badge.active   { background: var(--success-bg); color: var(--success-text); }
+        .badge.inactive { background: var(--error-bg); color: var(--error-text); }
+
+        .action-btn {
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            border: 1px solid var(--error-border);
+            background: var(--error-bg);
+            color: var(--error-text);
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .action-btn:hover { opacity: 0.8; }
+
+        .empty {
+            text-align: center;
+            padding: 2.5rem;
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            .header { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+            .header-right { width: 100%; flex-wrap: wrap; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="brand">Locus <span>Copilot</span></div>
+        <div class="header-right">
+            <a href="index.html" class="nav-btn" onclick="navigateTo(event,'index.html')">Analysis</a>
+            <a href="dashboard.html" class="nav-btn" onclick="navigateTo(event,'dashboard.html')">Dashboard</a>
+            <button class="nav-btn logout" onclick="logout()">Sign out</button>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="page-header">
+            <h1>Admin Panel</h1>
+            <p>System overview and user management</p>
+        </div>
+
+        <div id="statusMsg" class="status-msg"></div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Total Users</span>
+                <span class="stat-value" id="sUsers">-</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Total Searches</span>
+                <span class="stat-value" id="sSearches">-</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Saved Favorites</span>
+                <span class="stat-value" id="sFavs">-</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Active Today</span>
+                <span class="stat-value" id="sActive">-</span>
+            </div>
+        </div>
+
+        <!-- Users table -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2>Users</h2>
+                <button class="refresh-btn" onclick="loadUsers()">Refresh</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersBody">
+                        <tr><td class="empty" colspan="7">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = (() => {
+            const configured = (localStorage.getItem("api_base") || "").trim();
+            if (configured) return configured.replace(/\/+$/, "");
+            const host = window.location.hostname || "localhost";
+            return `${window.location.protocol}//${host}:8000/api`;
+        })();
+
+        function navigateTo(e, url) {
+            if (e) e.preventDefault();
+            document.body.classList.add('page-exit');
+            setTimeout(() => { window.location.href = url; }, 200);
+        }
+
+        function checkAuth() {
+            const token = localStorage.getItem("token");
+            if (!token) { navigateTo(null, 'login.html'); return null; }
+            if (localStorage.getItem("is_admin") !== "true") { navigateTo(null, 'index.html'); return null; }
+            return token;
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("email");
+            localStorage.removeItem("is_admin");
+            navigateTo(null, 'landing.html');
+        }
+
+        function headers() {
+            return { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token") };
+        }
+
+        function showStatus(msg, type) {
+            const el = document.getElementById("statusMsg");
+            el.textContent = msg;
+            el.className = "status-msg show " + type;
+            if (type !== "error") setTimeout(() => el.classList.remove("show"), 3500);
+        }
+
+        async function loadStatistics() {
+            try {
+                const res = await fetch(API + "/admin/stats", { headers: headers() });
+                if (!res.ok) throw 0;
+                const d = await res.json();
+                const s = d.stats || d;
+                document.getElementById("sUsers").textContent = s.total_users ?? "-";
+                document.getElementById("sSearches").textContent = s.total_searches ?? "-";
+                document.getElementById("sFavs").textContent = s.total_favorites ?? "-";
+                document.getElementById("sActive").textContent = s.active_today ?? "-";
+            } catch { showStatus("Could not load statistics", "error"); }
+        }
+
+        async function loadUsers() {
+            try {
+                const res = await fetch(API + "/admin/users", { headers: headers() });
+                if (!res.ok) throw 0;
+                const d = await res.json();
+                const list = d.users || [];
+                const tb = document.getElementById("usersBody");
+                if (!list.length) { tb.innerHTML = '<tr><td class="empty" colspan="7">No users</td></tr>'; return; }
+                tb.innerHTML = list.map(u => `
+                    <tr>
+                        <td>${u.email}</td>
+                        <td>${u.full_name || '-'}</td>
+                        <td><span class="badge ${u.is_admin ? 'admin' : 'user'}">${u.is_admin ? 'Admin' : 'User'}</span></td>
+                        <td><span class="badge ${u.is_active !== false ? 'active' : 'inactive'}">${u.is_active !== false ? 'Active' : 'Inactive'}</span></td>
+                        <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : '-'}</td>
+                        <td>${u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never'}</td>
+                        <td>${u.is_admin ? '-' : `<button class="action-btn" onclick="deactivateUser(${u.id}, '${(u.email || '').replace(/'/g, "\\'")}')">Deactivate</button>`}</td>
+                    </tr>
+                `).join("");
+            } catch { document.getElementById("usersBody").innerHTML = '<tr><td class="empty" colspan="7">Failed to load</td></tr>'; }
+        }
+
+        async function deactivateUser(userId, email) {
+            if (!confirm("Deactivate " + email + "?")) return;
+            try {
+                const res = await fetch(API + "/admin/users/" + userId + "/deactivate", {
+                    method: "POST", headers: headers()
+                });
+                if (res.ok) { showStatus("Deactivated " + email, "success"); loadUsers(); }
+                else showStatus("Failed to deactivate", "error");
+            } catch { showStatus("Error", "error"); }
+        }
+
+        // Init
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') document.body.classList.add('dark-theme');
+        })();
+
+        window.addEventListener("load", () => {
+            if (checkAuth()) { loadStatistics(); loadUsers(); setInterval(() => { loadStatistics(); loadUsers(); }, 30000); }
+        });
+    </script>
+</body>
+</html>

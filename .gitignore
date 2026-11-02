@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# SQLite database (runtime data)
+*.db
+*.sqlite
+*.sqlite3
+
+# Large data files (>100MB limit for GitHub)
+data/roads.geojson
+*.zip
+
+# Duplicate files (numbered copies)
+**(1).*
+README(1).md
+START(1).bat
+requirements(1).txt
+pytest(1).ini
+test_api(1).py
+test_business_types(1).py
+data(1).zip
+
+# Pytest cache
+.pytest_cache/
+
+# IDE / OS
+.idea/
+.vscode/
+*.DS_Store
+Thumbs.db
+
+# Logs
+*.log

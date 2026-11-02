@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Locus Copilot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--page-gradient), var(--bg-secondary);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255,252,247,0.85);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 2.5rem;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+        }
+        body.dark-theme .navbar { background: rgba(13, 13, 13, 0.85); }
+        .navbar-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.4px;
+            text-decoration: none;
+        }
+        .brand span { color: var(--accent-primary); }
+        .nav-links { display: flex; gap: 1rem; align-items: center; }
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: var(--radius-md);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-secondary); }
+
+        /* Main content */
+        .page {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 5rem 2rem 7rem;
+            flex: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+            opacity: 0;
+            animation: slideInUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
+        }
+        .page-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+        }
+        .page-header h1 em {
+            font-style: normal;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Description */
+        .about-section {
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: slideInUp 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
+        }
+        .about-section:nth-child(2) { animation-delay: 0.15s; }
+        .about-section:nth-child(3) { animation-delay: 0.25s; }
+        .about-section:nth-child(4) { animation-delay: 0.35s; }
+
+        .about-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        .about-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.92rem;
+        }
+
+        /* Tech stack chips */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .tech-chip {
+            padding: 0.35rem 0.8rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+        }
+        .tech-chip:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--glow-accent);
+        }
+
+        /* Owner card */
+        .owner-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            text-align: center;
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+        .owner-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--accent-gradient);
+        }
+        .owner-card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-secondary);
+            transform: translateY(-2px);
+        }
+
+        .owner-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.2rem;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .owner-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .owner-role {
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .owner-links {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .owner-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+        .owner-link svg { width: 16px; height: 16px; }
+
+        .link-linkedin {
+            background: #0a66c2;
+            color: white;
+        }
+        .link-linkedin:hover { background: #004182; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(10,102,194,0.3); }
+
+        .link-email {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .link-email:hover { border-color: var(--accent-primary); color: var(--accent-primary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .page { padding: 2.5rem 1.5rem 4rem; }
+            .page-header h1 { font-size: 1.7rem; }
+            .owner-links { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a class="brand" href="landing.html">Locus <span>Copilot</span></a>
+            <div class="nav-links">
+                <button class="nav-link" onclick="navigateTo('landing.html')">Home</button>
+                <button class="nav-link" onclick="navigateTo('use-cases.html')">Use Cases</button>
+                <button class="nav-link" onclick="navigateTo('contact.html')">Contact</button>
+                <button class="nav-link" onclick="navigateTo('index.html')">Analysis</button>
+                <button class="theme-toggle-btn" id="themeToggle" title="Toggle dark mode"><span class="knob"></span></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page">
+        <div class="page-header">
+            <h1>About <em>Locus Copilot</em></h1>
+            <p>A data-driven location intelligence platform built to help entrepreneurs find the best spots for their business in Chennai.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>The Problem</h2>
+            <p>Choosing where to set up a business is one of the most critical decisions an entrepreneur makes. Most rely on gut feeling, word of mouth, or expensive consultants. Locus Copilot changes that by bringing objective, multi-criteria analysis to the table -- layering real rent data, crowd density, competition saturation, and transit accessibility into a single weighted score.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>How It Works</h2>
+            <p>The platform divides Chennai into a grid of 744 micro-localities, each scored across four dimensions. Users set custom weights, choose a business type, and get Haversine-accurate ranked recommendations within any search radius. ML-powered features include K-Means zone clustering, AI-optimized weight profiles per business type, and personalized picks based on search history.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>Tech Stack</h2>
+            <div class="tech-grid">
+                <span class="tech-chip">Python</span>
+                <span class="tech-chip">FastAPI</span>
+                <span class="tech-chip">scikit-learn</span>
+                <span class="tech-chip">SQLite</span>
+                <span class="tech-chip">Leaflet.js</span>
+                <span class="tech-chip">OpenStreetMap</span>
+                <span class="tech-chip">NumPy</span>
+                <span class="tech-chip">JWT Auth</span>
+                <span class="tech-chip">Vanilla JS</span>
+                <span class="tech-chip">CSS Variables</span>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2>Built By</h2>
+            <div class="owner-card">
+                <div class="owner-avatar">NN</div>
+                <div class="owner-name">Nandini Sreejit Nair</div>
+                <div class="owner-role">AI & Decision Science Engineer</div>
+                <div class="owner-links">
+                    <a class="owner-link link-linkedin" href="https://www.linkedin.com/in/nandini-sreejit-nair/" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+                        LinkedIn
+                    </a>
+                    <a class="owner-link link-email" href="mailto:nandinisnair10@gmail.com">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+                        nandinisnair10@gmail.com
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>
+            Locus Copilot &middot; <a href="landing.html">Back to home</a> &middot;
+            <a href="privacy.html">Privacy</a> &middot;
+            <a href="terms.html">Terms</a>
+        </p>
+    </footer>
+
+    <script>
+        function navigateTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => { window.location.href = url; }, 250);
+        }
+
+        // Theme
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Card tilt on hover
+        const ownerCard = document.querySelector('.owner-card');
+        if (ownerCard) {
+            ownerCard.addEventListener('mousemove', e => {
+                const rect = ownerCard.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                ownerCard.style.transform = `translateY(-2px) perspective(600px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg)`;
+            });
+            ownerCard.addEventListener('mouseleave', () => { ownerCard.style.transform = ''; });
+        }
+
+        // Tech chip hover ripple
+        document.querySelectorAll('.tech-chip').forEach(chip => {
+            chip.addEventListener('mousemove', e => {
+                const rect = chip.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                chip.style.transform = `translateY(-1px) rotateY(${x * 8}deg)`;
+            });
+            chip.addEventListener('mouseleave', () => { chip.style.transform = ''; });
+        });
+
+        // Init theme
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') document.body.classList.add('dark-theme');
+        })();
+    </script>
+</body>
+</html>

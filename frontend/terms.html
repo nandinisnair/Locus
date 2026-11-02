@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms - Locus Copilot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--page-gradient), var(--bg-secondary);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background: rgba(255,252,247,0.85);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        body.dark-theme .navbar { background: rgba(28,28,30,0.85); }
+        .navbar-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .brand span { color: var(--accent-primary); }
+        .nav-links { display: flex; gap: 0.4rem; align-items: center; }
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.45rem 0.85rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 3.2rem 2rem 4.5rem;
+            flex: 1;
+        }
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+        }
+        .intro {
+            color: var(--text-secondary);
+            margin-bottom: 1.6rem;
+            line-height: 1.6;
+        }
+        .section {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+        .section h2 {
+            font-size: 0.98rem;
+            margin-bottom: 0.45rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        .section p {
+            color: var(--text-secondary);
+            font-size: 0.86rem;
+            line-height: 1.6;
+        }
+        .footer {
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: 1.4rem 2rem;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+        }
+        .footer a { color: var(--accent-primary); text-decoration: none; font-weight: 500; }
+
+        @media (max-width: 640px) {
+            .page { padding: 2.4rem 1.2rem 3.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a class="brand" href="landing.html">Locus <span>Copilot</span></a>
+            <div class="nav-links">
+                <button class="nav-link" onclick="navigateTo('landing.html')">Home</button>
+                <button class="nav-link" onclick="navigateTo('privacy.html')">Privacy</button>
+                <button class="theme-toggle-btn" id="themeToggle" title="Toggle dark mode"><span class="knob"></span></button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <h1>Terms of Use</h1>
+        <p class="intro">These terms define how this demo should be used during evaluations and internal showcases.</p>
+
+        <section class="section">
+            <h2>Demo Scope</h2>
+            <p>The platform is intended for evaluation, prototyping, and educational usage. Rankings are advisory signals, not legal or financial guarantees.</p>
+        </section>
+
+        <section class="section">
+            <h2>Acceptable Use</h2>
+            <p>Do not use the service for unlawful activity, credential abuse, reverse engineering attempts against hosted infrastructure, or automated scraping without permission.</p>
+        </section>
+
+        <section class="section">
+            <h2>Data Accuracy</h2>
+            <p>Market signals are derived from available datasets and may vary in freshness by locality. Always validate final site decisions with field verification and current local market checks.</p>
+        </section>
+
+        <section class="section">
+            <h2>Liability Limits</h2>
+            <p>The project owner is not responsible for losses from relying solely on demo output. Production deployment should include governance, monitoring, and legal review.</p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Locus Copilot &middot; <a href="privacy.html">Privacy</a> &middot; <a href="contact.html">Contact</a></p>
+    </footer>
+
+    <script>
+        function navigateTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => { window.location.href = url; }, 250);
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        (function initTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in - Locus Copilot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--page-gradient), var(--bg-secondary);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .back-link {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color var(--transition-fast);
+        }
+        .back-link:hover { color: var(--text-primary); }
+        .container { width: 100%; max-width: 380px; padding: 2rem; }
+        .brand {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+        .brand span { color: var(--accent-primary); }
+        .card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            animation: scaleIn 0.5s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .card:hover {
+            box-shadow: var(--shadow-xl);
+        }
+        .card h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .card p.sub {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 0.55rem;
+            color: var(--text-secondary);
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-family: inherit;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+        .error-msg {
+            color: var(--error-text);
+            background: var(--error-bg);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            margin-bottom: 1.25rem;
+            display: none;
+            border: 1px solid var(--error-border);
+        }
+        .error-msg.show { display: block; }
+        .btn {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .btn:hover {
+            box-shadow: 0 6px 20px rgba(91,127,110,0.3);
+            transform: translateY(-2px);
+        }
+        .btn:active { transform: translateY(0); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 0.4rem;
+            vertical-align: middle;
+        }
+        .footer-text {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+        }
+        .footer-text a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer-text a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <a href="landing.html" class="back-link" onclick="navigateTo(event,'landing.html')">&larr; Home</a>
+    <div class="container">
+        <div class="brand">Locus <span>Copilot</span></div>
+        <div class="card">
+            <h1>Welcome back</h1>
+            <p class="sub">Sign in to continue to your dashboard</p>
+
+            <div class="error-msg" id="errorMsg"></div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required placeholder="you@example.com" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn" id="submitBtn">Sign in</button>
+            </form>
+
+            <div class="footer-text">
+                Don't have an account? <a href="register.html" onclick="navigateTo(event,'register.html')">Create one</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = (() => {
+            const configured = (localStorage.getItem("api_base") || "").trim();
+            if (configured) return configured.replace(/\/+$/, "");
+            const host = window.location.hostname || "localhost";
+            return `${window.location.protocol}//${host}:8000/api`;
+        })();
+
+        function navigateTo(e, url) {
+            if (e) e.preventDefault();
+            document.body.classList.add('page-exit');
+            setTimeout(() => { window.location.href = url; }, 200);
+        }
+
+        // Theme
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') document.body.classList.add('dark-theme');
+            // Auto-redirect if already logged in
+            if (localStorage.getItem('token')) navigateTo(null, 'index.html');
+        })();
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const btn = document.getElementById("submitBtn");
+            const err = document.getElementById("errorMsg");
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span>Signing in...';
+            err.classList.remove("show");
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("email", data.user.email);
+                    localStorage.setItem("is_admin", data.user.is_admin);
+                    navigateTo(null, 'index.html');
+                } else {
+                    showError(data.detail || "Invalid credentials");
+                }
+            } catch (error) {
+                showError("Connection error. Is the server running?");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "Sign in";
+            }
+        }
+
+        function showError(msg) {
+            const el = document.getElementById("errorMsg");
+            el.textContent = msg;
+            el.classList.add("show");
+        }
+    </script>
+</body>
+</html>

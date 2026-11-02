@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Cases - Locus Copilot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--page-gradient), var(--bg-secondary);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background: rgba(255,252,247,0.85);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        body.dark-theme .navbar { background: rgba(28,28,30,0.85); }
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            text-decoration: none;
+        }
+        .brand span { color: var(--accent-primary); }
+        .nav-links { display: flex; gap: 0.4rem; align-items: center; }
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.45rem 0.85rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .nav-link:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 3.4rem 2rem 5rem;
+            flex: 1;
+        }
+        .intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 2.2rem;
+        }
+        .intro h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 4vw, 2.6rem);
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.03em;
+        }
+        .intro p { color: var(--text-secondary); line-height: 1.6; }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+        .card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-secondary);
+        }
+        .tag {
+            display: inline-flex;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            background: var(--accent-light);
+            color: var(--accent-primary);
+            margin-bottom: 0.6rem;
+        }
+        .card h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 0.45rem;
+        }
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.55;
+            font-size: 0.84rem;
+            margin-bottom: 0.7rem;
+        }
+        .list {
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .cta {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .cta a {
+            text-decoration: none;
+            color: white;
+            background: var(--accent-gradient);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            padding: 0.7rem 1.2rem;
+            font-weight: 600;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .cta a:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+        .footer {
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: 1.4rem 2rem;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+        }
+        .footer a { color: var(--accent-primary); text-decoration: none; font-weight: 500; }
+
+        @media (max-width: 980px) {
+            .cards { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 700px) {
+            .cards { grid-template-columns: 1fr; }
+            .page { padding: 2.7rem 1.2rem 4rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a class="brand" href="landing.html">Locus <span>Copilot</span></a>
+            <div class="nav-links">
+                <button class="nav-link" onclick="navigateTo('landing.html')">Home</button>
+                <button class="nav-link" onclick="navigateTo('about.html')">About</button>
+                <button class="nav-link" onclick="navigateTo('contact.html')">Contact</button>
+                <button class="theme-toggle-btn" id="themeToggle" title="Toggle dark mode"><span class="knob"></span></button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <section class="intro">
+            <h1>Where Locus Copilot Works Best</h1>
+            <p>These business scenarios map directly to your scoring engine and business-type optimization settings, so users immediately understand how to use the platform during demos.</p>
+        </section>
+
+        <section class="cards">
+            <article class="card">
+                <span class="tag">Medical</span>
+                <h2>Neighborhood Clinic Launch</h2>
+                <p>Prioritize areas where healthcare demand exists and supporting amenities are strong, while avoiding weak transit pockets.</p>
+                <div class="list">Best for: Clinics, diagnostics centers, pharmacies.</div>
+            </article>
+            <article class="card">
+                <span class="tag">Restaurant</span>
+                <h2>Fast Casual Outlet</h2>
+                <p>Find high-footfall corridors with manageable rent pressure and dense nearby demand signals from POI activity.</p>
+                <div class="list">Best for: Cafes, cloud-kitchen hubs, dine-in concepts.</div>
+            </article>
+            <article class="card">
+                <span class="tag">Laptop</span>
+                <h2>Electronics Service Desk</h2>
+                <p>Target productivity and education clusters where users repeatedly need repair, accessory, and upgrade support.</p>
+                <div class="list">Best for: Repair stores, accessory retail, tech kiosks.</div>
+            </article>
+            <article class="card">
+                <span class="tag">Mobile</span>
+                <h2>Mobile Service Point</h2>
+                <p>Focus on dense, well-connected routes where customer churn is high and same-day service speed matters.</p>
+                <div class="list">Best for: Phone repair, SIM support, accessories.</div>
+            </article>
+            <article class="card">
+                <span class="tag">Automobile</span>
+                <h2>Workshop Expansion</h2>
+                <p>Choose zones with road connectivity and practical access while balancing operational cost and demand coverage.</p>
+                <div class="list">Best for: Mechanic shops, quick-service garages.</div>
+            </article>
+            <article class="card">
+                <span class="tag">Stationary</span>
+                <h2>Education Cluster Store</h2>
+                <p>Identify localities near schools and coaching ecosystems where daily utility purchases drive repeat business.</p>
+                <div class="list">Best for: Books, exam prep, print and supply shops.</div>
+            </article>
+        </section>
+
+        <div class="cta">
+            <a href="index.html">Run Live Analysis</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Locus Copilot &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p>
+    </footer>
+
+    <script>
+        function navigateTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => { window.location.href = url; }, 250);
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        (function initTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+locality,avg_rent,min_rent,max_rent,lat,lon,unit,source
+T Nagar,120,90,150,13.0418,80.2341,per_sqft,market_estimate_2025
+Anna Nagar,110,85,140,13.0850,80.2101,per_sqft,market_estimate_2025
+Anna Nagar West,105,80,135,13.0870,80.1970,per_sqft,market_estimate_2025
+Anna Nagar East,112,88,142,13.0860,80.2250,per_sqft,market_estimate_2025
+Adyar,105,80,135,13.0063,80.2574,per_sqft,market_estimate_2025
+Velachery,80,60,110,12.9815,80.2180,per_sqft,market_estimate_2025
+Guindy,95,70,125,13.0067,80.2206,per_sqft,market_estimate_2025
+Kodambakkam,85,60,115,13.0520,80.2250,per_sqft,market_estimate_2025
+Nungambakkam,125,95,160,13.0600,80.2450,per_sqft,market_estimate_2025
+Mylapore,100,75,130,13.0368,80.2676,per_sqft,market_estimate_2025
+Porur,70,50,95,13.0382,80.1568,per_sqft,market_estimate_2025
+Tambaram,55,40,75,12.9249,80.1278,per_sqft,market_estimate_2025
+Tambaram East,52,38,72,12.9300,80.1400,per_sqft,market_estimate_2025
+Tambaram West,50,35,70,12.9200,80.1150,per_sqft,market_estimate_2025
+Pallavaram,60,45,85,12.9676,80.1498,per_sqft,market_estimate_2025
+Thoraipakkam,75,55,100,12.9350,80.2280,per_sqft,market_estimate_2025
+Sholinganallur,65,50,90,12.9010,80.2270,per_sqft,market_estimate_2025
+OMR,70,55,95,12.9100,80.2270,per_sqft,market_estimate_2025
+Perungudi,80,60,110,12.9630,80.2400,per_sqft,market_estimate_2025
+Potheri,30,20,45,12.8230,80.0440,per_sqft,market_estimate_2025
+Kattankulathur,32,22,48,12.8310,80.0700,per_sqft,market_estimate_2025
+Guduvanchery,35,25,50,12.8460,80.0600,per_sqft,market_estimate_2025
+Urapakkam,38,28,52,12.8700,80.0900,per_sqft,market_estimate_2025
+Vandalur,40,28,55,12.8920,80.0810,per_sqft,market_estimate_2025
+Perungalathur,42,30,58,12.9040,80.0960,per_sqft,market_estimate_2025
+Chromepet,55,40,75,12.9510,80.1420,per_sqft,market_estimate_2025
+Pallikaranai,58,42,78,12.9370,80.2050,per_sqft,market_estimate_2025
+Medavakkam,52,38,70,12.9200,80.1950,per_sqft,market_estimate_2025
+Madipakkam,62,45,80,12.9620,80.1970,per_sqft,market_estimate_2025
+Nanganallur,65,48,85,12.9820,80.1870,per_sqft,market_estimate_2025
+Alandur,68,50,88,13.0020,80.2030,per_sqft,market_estimate_2025
+Saidapet,78,55,100,13.0210,80.2280,per_sqft,market_estimate_2025
+Ashok Nagar,88,65,115,13.0370,80.2130,per_sqft,market_estimate_2025
+Vadapalani,82,58,108,13.0520,80.2120,per_sqft,market_estimate_2025
+KK Nagar,80,57,105,13.0380,80.2050,per_sqft,market_estimate_2025
+West Mambalam,92,68,120,13.0380,80.2230,per_sqft,market_estimate_2025
+Teynampet,115,85,150,13.0450,80.2500,per_sqft,market_estimate_2025
+Alwarpet,118,90,155,13.0340,80.2570,per_sqft,market_estimate_2025
+Raja Annamalai Puram,122,92,158,13.0420,80.2640,per_sqft,market_estimate_2025
+Egmore,90,65,120,13.0727,80.2610,per_sqft,market_estimate_2025
+Kilpauk,88,62,115,13.0820,80.2440,per_sqft,market_estimate_2025
+Chetpet,92,68,120,13.0720,80.2370,per_sqft,market_estimate_2025
+Aminjikarai,85,60,110,13.0740,80.2280,per_sqft,market_estimate_2025
+Shenoy Nagar,82,58,108,13.0830,80.2280,per_sqft,market_estimate_2025
+Royapettah,98,72,128,13.0520,80.2620,per_sqft,market_estimate_2025
+Triplicane,72,52,95,13.0560,80.2750,per_sqft,market_estimate_2025
+Chepauk,75,55,98,13.0620,80.2800,per_sqft,market_estimate_2025
+George Town,85,60,115,13.0930,80.2830,per_sqft,market_estimate_2025
+Sowcarpet,78,55,105,13.0920,80.2730,per_sqft,market_estimate_2025
+Perambur,58,42,78,13.1130,80.2470,per_sqft,market_estimate_2025
+Kolathur,52,38,72,13.1250,80.2170,per_sqft,market_estimate_2025
+Villivakkam,55,40,75,13.1180,80.2090,per_sqft,market_estimate_2025
+Ambattur,50,35,70,13.1150,80.1530,per_sqft,market_estimate_2025
+Avadi,40,28,56,13.1140,80.1010,per_sqft,market_estimate_2025
+Mogappair,60,42,82,13.0950,80.1730,per_sqft,market_estimate_2025
+Mogappair East,62,44,84,13.0980,80.1850,per_sqft,market_estimate_2025
+Mogappair West,58,40,78,13.0920,80.1650,per_sqft,market_estimate_2025
+Koyambedu,78,55,105,13.0700,80.1970,per_sqft,market_estimate_2025
+Virugambakkam,72,50,96,13.0530,80.1920,per_sqft,market_estimate_2025
+Valasaravakkam,68,48,92,13.0480,80.1720,per_sqft,market_estimate_2025
+Ramapuram,65,46,88,13.0310,80.1800,per_sqft,market_estimate_2025
+Manapakkam,62,44,84,13.0200,80.1650,per_sqft,market_estimate_2025
+Thiruvanmiyur,95,70,125,12.9830,80.2610,per_sqft,market_estimate_2025
+Besant Nagar,108,82,140,13.0000,80.2700,per_sqft,market_estimate_2025
+Injambakkam,60,42,80,12.9180,80.2510,per_sqft,market_estimate_2025
+Neelankarai,62,44,82,12.9500,80.2580,per_sqft,market_estimate_2025
+Palavakkam,65,46,86,12.9600,80.2600,per_sqft,market_estimate_2025
+Navalur,55,38,75,12.8450,80.2270,per_sqft,market_estimate_2025
+Siruseri,45,30,62,12.8250,80.2200,per_sqft,market_estimate_2025
+Kelambakkam,42,28,58,12.7900,80.2200,per_sqft,market_estimate_2025
+Padur,40,26,56,12.8100,80.2000,per_sqft,market_estimate_2025
+Karapakkam,60,42,80,12.9230,80.2300,per_sqft,market_estimate_2025
+Egattur,48,32,66,12.8530,80.2150,per_sqft,market_estimate_2025
+Thalambur,45,30,62,12.8600,80.1950,per_sqft,market_estimate_2025
+Thiruporur,35,24,50,12.7200,80.1850,per_sqft,market_estimate_2025
+Maraimalai Nagar,35,24,50,12.7900,80.0250,per_sqft,market_estimate_2025
+Singaperumal Koil,38,26,52,12.7600,80.0100,per_sqft,market_estimate_2025
+Chengalpattu,32,22,46,12.6920,79.9760,per_sqft,market_estimate_2025
+Mahindra City,38,26,52,12.7470,80.0050,per_sqft,market_estimate_2025
+SRM Nagar,28,18,40,12.8230,80.0490,per_sqft,market_estimate_2025
+Poonamallee,48,34,66,13.0480,80.0930,per_sqft,market_estimate_2025
+Kundrathur,42,30,58,12.9960,80.0980,per_sqft,market_estimate_2025
+Mangadu,45,32,62,13.0190,80.1200,per_sqft,market_estimate_2025
+Gerugambakkam,48,34,66,13.0200,80.1370,per_sqft,market_estimate_2025
+Mudichur,38,26,52,12.9100,80.0700,per_sqft,market_estimate_2025
+Selaiyur,48,34,64,12.9100,80.1440,per_sqft,market_estimate_2025
+Sembakkam,45,32,62,12.9230,80.1260,per_sqft,market_estimate_2025
+Perumbakkam,52,37,70,12.9080,80.2040,per_sqft,market_estimate_2025
+Sithalapakkam,48,33,66,12.8850,80.1850,per_sqft,market_estimate_2025
+Kovilambakkam,55,40,74,12.9480,80.2080,per_sqft,market_estimate_2025
+Madambakkam,42,30,58,12.8970,80.1580,per_sqft,market_estimate_2025
+Ottiyambakkam,38,26,52,12.8700,80.1700,per_sqft,market_estimate_2025
+Vengaivasal,48,34,64,12.9100,80.1700,per_sqft,market_estimate_2025
+Rajakilpakkam,50,36,68,12.9380,80.1580,per_sqft,market_estimate_2025
+Chitlapakkam,52,38,70,12.9420,80.1340,per_sqft,market_estimate_2025
+Pammal,50,36,68,12.9700,80.1270,per_sqft,market_estimate_2025
+Anakaputhur,48,34,66,12.9770,80.1130,per_sqft,market_estimate_2025
+St Thomas Mount,72,52,96,13.0060,80.1950,per_sqft,market_estimate_2025
+Adambakkam,65,46,88,12.9880,80.2050,per_sqft,market_estimate_2025
+Puzhuthivakkam,60,42,80,12.9900,80.1730,per_sqft,market_estimate_2025
+Zamin Pallavaram,58,42,78,12.9610,80.1480,per_sqft,market_estimate_2025
+Minjur,28,18,40,13.2790,80.2590,per_sqft,market_estimate_2025
+Ennore,32,22,45,13.2150,80.3130,per_sqft,market_estimate_2025
+Tondiarpet,52,38,70,13.1260,80.2850,per_sqft,market_estimate_2025
+Royapuram,55,40,74,13.1160,80.2910,per_sqft,market_estimate_2025
+Washermanpet,50,36,68,13.1120,80.2780,per_sqft,market_estimate_2025
+Madhavaram,42,30,58,13.1520,80.2310,per_sqft,market_estimate_2025
+Manali,35,24,50,13.1680,80.2580,per_sqft,market_estimate_2025
+Tiruvottiyur,40,28,56,13.1620,80.3030,per_sqft,market_estimate_2025
+Red Hills,35,24,50,13.1900,80.1860,per_sqft,market_estimate_2025
+Korattur,52,38,70,13.1090,80.1900,per_sqft,market_estimate_2025
+Thiruverkadu,42,30,58,13.0770,80.1340,per_sqft,market_estimate_2025
+Maduravoyal,55,40,74,13.0640,80.1640,per_sqft,market_estimate_2025
+Nerkundram,58,42,78,13.0700,80.1800,per_sqft,market_estimate_2025
+Nolambur,55,40,74,13.0800,80.1700,per_sqft,market_estimate_2025
+Alapakkam,52,38,70,13.0500,80.1500,per_sqft,market_estimate_2025
+Mugalivakkam,58,42,78,13.0270,80.1630,per_sqft,market_estimate_2025
+Kovur,48,34,66,13.0620,80.1400,per_sqft,market_estimate_2025
+Iyyappanthangal,50,36,68,13.0450,80.1300,per_sqft,market_estimate_2025
+Tambaram Sanatorium,50,36,68,12.9180,80.1200,per_sqft,market_estimate_2025
+Irumbuliyur,45,32,62,12.9180,80.1100,per_sqft,market_estimate_2025
+Camp Road,48,34,66,12.9300,80.1300,per_sqft,market_estimate_2025
+Hasthinapuram,50,36,68,12.9500,80.1650,per_sqft,market_estimate_2025
+Purasawalkam,72,52,96,13.0870,80.2590,per_sqft,market_estimate_2025
+Vepery,78,56,104,13.0820,80.2650,per_sqft,market_estimate_2025
+Park Town,82,60,108,13.0840,80.2740,per_sqft,market_estimate_2025
+Thousand Lights,105,78,136,13.0570,80.2560,per_sqft,market_estimate_2025
+Gopalapuram,115,86,150,13.0550,80.2520,per_sqft,market_estimate_2025
+Boat Club,130,98,168,13.0510,80.2540,per_sqft,market_estimate_2025
+Mandaveli,92,68,120,13.0250,80.2650,per_sqft,market_estimate_2025
+Kotturpuram,98,72,128,13.0150,80.2480,per_sqft,market_estimate_2025
+Taramani,72,52,96,12.9860,80.2420,per_sqft,market_estimate_2025
+Lattice Bridge Road,105,78,136,13.0530,80.2720,per_sqft,market_estimate_2025
+Luz,102,76,132,13.0370,80.2710,per_sqft,market_estimate_2025
+Gandhinagar,58,42,78,13.0560,80.2510,per_sqft,market_estimate_2025
+ECR,62,44,82,12.9400,80.2480,per_sqft,market_estimate_2025
+Kandanchavadi,68,48,90,12.9600,80.2360,per_sqft,market_estimate_2025
+Okkiyam Thoraipakkam,72,52,96,12.9310,80.2310,per_sqft,market_estimate_2025
+Semmancheri,48,34,66,12.8700,80.2330,per_sqft,market_estimate_2025

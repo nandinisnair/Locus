@@ -1,0 +1,419 @@
+/* ============================================
+   LOCUS COPILOT - APPLE DESIGN SYSTEM
+   Minimalist, spacious, smooth animations
+   ============================================ */
+
+:root {
+    /* Light - Apple-inspired clean palette */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --bg-hover: #ececf1;
+    --bg-panel: rgba(255, 255, 255, 0.95);
+
+    --text-primary: #000000;
+    --text-secondary: #525252;
+    --text-tertiary: #999999;
+
+    --border-color: #e5e5e7;
+    --border-hover: #d1d1d6;
+
+    /* Apple accent - Blue: vibrant yet professional */
+    --accent-primary: #007aff;
+    --accent-secondary: #5ac8fa;
+    --accent-light: #e8f4ff;
+    --accent-gradient: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%);
+
+    --page-gradient: radial-gradient(circle 800px at 50% 50%, rgba(0, 122, 255, 0.05) 0%, transparent 70%);
+
+    --gold: #ff9500;
+    --gold-light: #fff0e6;
+
+    --success-bg: #f0fdf4;
+    --success-text: #166534;
+    --success-border: #bbf7d0;
+
+    --error-bg: #fef2f2;
+    --error-text: #991b1b;
+    --error-border: #fecaca;
+
+    --info-bg: #f0f9ff;
+    --info-text: #0369a1;
+    --info-border: #bae6fd;
+
+    /* Apple-style subtle shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.15);
+
+    /* Apple animations: smooth, purposeful */
+    --transition-fast: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Spacing scale (Apple uses 4px base) */
+    --radius-sm: 10px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+
+    --glow-accent: rgba(0, 122, 255, 0.1);
+    --glow-gold: rgba(255, 149, 0, 0.1);
+}
+
+/* Dark Theme - Apple's elegant dark mode */
+body.dark-theme {
+    --bg-primary: #0d0d0d;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #262626;
+    --bg-hover: #333333;
+    --bg-panel: rgba(13, 13, 13, 0.98);
+
+    --text-primary: #f5f5f7;
+    --text-secondary: #b0b0b5;
+    --text-tertiary: #86868b;
+
+    --border-color: #424245;
+    --border-hover: #515154;
+
+    --accent-primary: #0a84ff;
+    --accent-secondary: #64b5f6;
+    --accent-light: #1a3a52;
+
+    --page-gradient: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #161616 100%);
+
+    --gold: #ff9500;
+    --gold-light: #2d2110;
+
+    --success-bg: #0d3a1a;
+    --success-text: #81c784;
+    --success-border: #1e4d2b;
+
+    --error-bg: #3a1515;
+    --error-text: #f08080;
+    --error-border: #8b2323;
+
+    --info-bg: #0d1f3a;
+    --info-text: #81b4f8;
+    --info-border: #0e3a8c;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.7);
+    --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.8);
+
+    --glow-accent: rgba(10, 132, 255, 0.15);
+    --glow-gold: rgba(255, 149, 0, 0.15);
+}
+
+/* ============================================
+   PRIVACY & MINIMALISM - HIDE EMAIL
+   ============================================ */
+
+#userEmail {
+    display: none !important;
+}
+
+/* ============================================
+   SMOOTH TRANSITIONS
+   ============================================ */
+
+*, *::before, *::after {
+    transition: background-color var(--transition-normal),
+                color var(--transition-normal),
+                border-color var(--transition-normal),
+                box-shadow var(--transition-normal),
+                transform var(--transition-fast),
+                opacity var(--transition-fast);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-16px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageFadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px var(--glow-accent); }
+    50% { box-shadow: 0 0 40px var(--glow-accent), 0 0 60px var(--glow-accent); }
+}
+
+body {
+    animation: pageFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.page-exit {
+    animation: pageFadeOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ============================================
+   CURSOR-REACTIVE UTILITIES
+   ============================================ */
+
+.hover-lift {
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.hover-glow {
+    transition: box-shadow var(--transition-normal);
+}
+.hover-glow:hover {
+    box-shadow: 0 0 0 1px var(--accent-primary), 0 8px 30px var(--glow-accent);
+}
+
+.hover-scale {
+    transition: transform var(--transition-fast);
+}
+.hover-scale:hover {
+    transform: scale(1.03);
+}
+
+.interactive-card {
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    will-change: transform;
+}
+.interactive-card:hover {
+    transform: translateY(-4px) scale(1.005);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-secondary);
+}
+.interactive-card:active {
+    transform: translateY(-1px) scale(0.995);
+}
+
+/* Magnetic button effect */
+.btn-magnetic {
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    will-change: transform;
+}
+.btn-magnetic:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.btn-magnetic:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* Stagger animation for children */
+.stagger-children > * {
+    opacity: 0;
+    animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   DARK MODE TOGGLE (Refined)
+   ============================================ */
+
+.theme-toggle-btn {
+    width: 48px;
+    height: 28px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    cursor: pointer;
+    padding: 3px;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    transition: all var(--transition-normal);
+    flex-shrink: 0;
+    font-size: 0;
+    color: transparent;
+    overflow: hidden;
+}
+
+.theme-toggle-btn:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 0 0 3px var(--glow-accent);
+}
+
+.theme-toggle-btn .knob {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-normal) cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+.theme-toggle-btn .knob::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    transition: background var(--transition-normal);
+}
+
+body.dark-theme .theme-toggle-btn .knob {
+    transform: translateX(20px);
+}
+
+body.dark-theme .theme-toggle-btn .knob::after {
+    background: var(--gold);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.animate-slide-up  { animation: slideInUp var(--transition-normal); }
+.animate-slide-down { animation: slideInDown var(--transition-normal); }
+.animate-slide-left { animation: slideInLeft var(--transition-normal); }
+.animate-fade-in   { animation: fadeIn var(--transition-normal); }
+.animate-scale-in  { animation: scaleIn var(--transition-normal); }
+
+/* ============================================
+   RANGE SLIDER STYLING
+   ============================================ */
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--bg-tertiary);
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    padding: 0;
+    box-shadow: none;
+    margin: 0.5rem 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    cursor: pointer;
+    border: 3px solid var(--bg-primary);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    cursor: pointer;
+    border: 3px solid var(--bg-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ============================================
+   BADGE STYLES
+   ============================================ */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.badge-admin  { background: var(--accent-light); color: var(--accent-primary); }
+.badge-user   { background: var(--success-bg); color: var(--success-text); }
+.badge-active { background: var(--success-bg); color: var(--success-text); }
+.badge-inactive { background: var(--error-bg); color: var(--error-text); }

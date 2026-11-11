@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in - Locus Copilot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--page-gradient), var(--bg-secondary);
+            font-family: var(--font-sans);
+            background: var(--page-gradient), var(--bg-base);
             background-attachment: fixed;
             color: var(--text-primary);
-            background-color: var(--bg-secondary);
+            background-color: var(--bg-base);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -46,23 +46,23 @@
         }
         .brand span { color: var(--accent-primary); }
         .card {
-            background: var(--bg-primary);
-            border-radius: var(--radius-lg);
+            background: var(--bg-surface);
+            border-radius: var(--radius-panel) !important;
             padding: 2.5rem;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-lg);
-            opacity: 0;
-            animation: scaleIn 0.5s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
+            animation: scaleIn 0.35s cubic-bezier(0.4,0,0.2,1) forwards;
             transition: transform var(--transition-fast), box-shadow var(--transition-fast);
         }
         .card:hover {
             box-shadow: var(--shadow-xl);
         }
         .card h1 {
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-sans);
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
         .card p.sub {
             color: var(--text-tertiary);
@@ -81,10 +81,10 @@
             width: 100%;
             padding: 0.85rem 1rem;
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-control) !important;
             font-size: 0.95rem;
             font-family: inherit;
-            background: var(--bg-secondary);
+            background: var(--bg-surface);
             color: var(--text-primary);
             transition: all var(--transition-fast);
         }
@@ -106,19 +106,20 @@
         .error-msg.show { display: block; }
         .btn {
             width: 100%;
-            padding: 0.9rem 1rem;
-            background: var(--accent-gradient);
-            color: white;
+            padding: 0.85rem 1rem;
+            background: var(--btn-primary-bg) !important;
+            color: var(--btn-primary-text) !important;
             border: none;
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-control) !important;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
+            box-shadow: var(--btn-primary-bloom);
             transition: all var(--transition-fast);
         }
         .btn:hover {
-            box-shadow: 0 6px 20px rgba(91,127,110,0.3);
-            transform: translateY(-2px);
+            background: var(--btn-primary-hover) !important;
+            transform: translateY(-1px);
         }
         .btn:active { transform: translateY(0); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
@@ -148,6 +149,9 @@
     </style>
 </head>
 <body>
+    <div style="position: absolute; top: 1.5rem; right: 1.5rem; z-index: 10;">
+        <button class="theme-toggle-btn" id="themeToggle" title="Toggle theme"><span class="knob"></span></button>
+    </div>
     <a href="landing.html" class="back-link" onclick="navigateTo(event,'landing.html')">&larr; Home</a>
     <div class="container">
         <div class="brand">Locus <span>Copilot</span></div>
@@ -237,6 +241,19 @@
             el.textContent = msg;
             el.classList.add("show");
         }
+
+        // Init Theme
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') document.body.classList.add('dark-theme');
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const isDark = document.body.classList.toggle('dark-theme');
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                });
+            }
+        })();
     </script>
 </body>
 </html>

@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Locus Copilot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--page-gradient), var(--bg-secondary);
+            font-family: var(--font-sans);
+            background: var(--page-gradient), var(--bg-base);
             background-attachment: fixed;
             color: var(--text-primary);
-            background-color: var(--bg-secondary);
+            background-color: var(--bg-base);
         }
 
         /* Header */
@@ -218,6 +218,7 @@
             <a href="index.html" class="nav-btn" onclick="navigateTo(event,'index.html')">Analysis</a>
             <a href="about.html" class="nav-btn" onclick="navigateTo(event,'about.html')">About</a>
             <a href="admin.html" class="nav-btn" id="adminLink" style="display:none;" onclick="navigateTo(event,'admin.html')">Admin</a>
+            <button class="theme-toggle-btn" id="themeToggle" title="Toggle theme"><span class="knob"></span></button>
             <button class="nav-btn logout" onclick="logout()">Sign out</button>
         </div>
     </div>
@@ -468,6 +469,13 @@
         (function() {
             const theme = localStorage.getItem('theme') || 'light';
             if (theme === 'dark') document.body.classList.add('dark-theme');
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const isDark = document.body.classList.toggle('dark-theme');
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                });
+            }
         })();
 
         window.addEventListener("load", () => {

@@ -9,6 +9,10 @@ echo.
 
 set PROJECT_DIR=%~dp0
 set VENV=%PROJECT_DIR%.venv\Scripts\python.exe
+"%VENV%" --version >nul 2>&1
+if errorlevel 1 (
+    set VENV=python
+)
 set PYTHONUTF8=1
 set PYTHONIOENCODING=utf-8
 

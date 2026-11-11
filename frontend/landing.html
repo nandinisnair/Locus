@@ -4,23 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Locus Copilot - Smart Location Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--page-gradient), var(--bg-secondary);
+            font-family: var(--font-sans);
+            background: var(--page-gradient), var(--bg-base);
             background-attachment: fixed;
             color: var(--text-primary);
-            background-color: var(--bg-secondary);
+            background-color: var(--bg-base);
             min-height: 100vh;
             overflow-x: hidden;
         }
 
         /* Navbar */
         .navbar {
-            background: rgba(255,252,247,0.85);
+            background: var(--bg-glass);
             border-bottom: 1px solid var(--border-color);
             padding: 0 2.5rem;
             height: 64px;
@@ -29,8 +29,8 @@
             left: 0;
             right: 0;
             z-index: 100;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             transition: box-shadow var(--transition-normal);
             display: flex;
             align-items: center;
@@ -69,10 +69,11 @@
         .nav-link:hover { color: var(--text-primary); background: var(--bg-secondary); }
         .nav-login { color: var(--accent-primary); font-weight: 600; }
         .nav-signup {
-            background: var(--accent-gradient);
-            color: white;
+            background: var(--btn-primary-bg) !important;
+            color: var(--btn-primary-text) !important;
             font-weight: 600;
             padding: 0.6rem 1.2rem;
+            box-shadow: var(--btn-primary-bloom);
         }
         .nav-signup:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
         .user-menu { display: none; }
@@ -92,32 +93,27 @@
             background: var(--accent-light);
             color: var(--accent-primary);
             padding: 0.45rem 1rem;
-            border-radius: 999px;
+            border-radius: var(--radius-control) !important;
             font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.07em;
             text-transform: uppercase;
             margin-bottom: 1.75rem;
-            opacity: 0;
-            animation: slideInUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
+            animation: slideInUp 0.4s cubic-bezier(0.4,0,0.2,1) 0.05s forwards;
         }
         .hero h2 {
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-sans);
             font-size: clamp(2.4rem, 5vw, 3.6rem);
             font-weight: 700;
             line-height: 1.1;
             color: var(--text-primary);
             margin-bottom: 1.5rem;
             letter-spacing: -0.03em;
-            opacity: 0;
-            animation: slideInUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.2s forwards;
+            animation: slideInUp 0.4s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
         }
         .hero h2 em {
             font-style: normal;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent-primary);
         }
         .hero p {
             font-size: 1.15rem;
@@ -125,16 +121,14 @@
             line-height: 1.7;
             max-width: 580px;
             margin: 0 auto 3rem;
-            opacity: 0;
-            animation: slideInUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.3s forwards;
+            animation: slideInUp 0.4s cubic-bezier(0.4,0,0.2,1) 0.15s forwards;
         }
         .cta-group {
             display: flex;
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
-            opacity: 0;
-            animation: slideInUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.4s forwards;
+            animation: slideInUp 0.4s cubic-bezier(0.4,0,0.2,1) 0.2s forwards;
         }
         .cta-btn {
             padding: 0.85rem 2rem;
@@ -150,11 +144,15 @@
             transition: all var(--transition-fast);
         }
         .cta-primary {
-            background: var(--accent-gradient);
-            color: white;
-            box-shadow: 0 4px 14px rgba(91,127,110,0.25);
+            background: var(--btn-primary-bg) !important;
+            color: var(--btn-primary-text) !important;
+            box-shadow: var(--btn-primary-bloom);
         }
-        .cta-primary:hover { box-shadow: 0 8px 28px rgba(91,127,110,0.35); transform: translateY(-2px); }
+        .cta-primary:hover {
+            background: var(--btn-primary-hover) !important;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
         .cta-primary:active { transform: translateY(0); }
         .cta-primary .arrow { transition: transform var(--transition-fast); display: inline-block; }
         .cta-primary:hover .arrow { transform: translateX(3px); }
@@ -303,10 +301,12 @@
                 <button class="nav-link" onclick="navigateTo(null,'about.html')">About</button>
                 <button class="nav-link nav-login" onclick="navigateTo(null,'login.html')">Sign in</button>
                 <button class="nav-link nav-signup" onclick="navigateTo(null,'register.html')">Get Started <span class="arrow">&rarr;</span></button>
+                <button class="theme-toggle-btn" id="themeToggle" title="Toggle theme"><span class="knob"></span></button>
             </div>
             <div class="nav-links user-menu" id="userMenu">
                 <span class="nav-link" id="userEmail"></span>
                 <button class="nav-link" onclick="navigateTo(null,'index.html')">Dashboard</button>
+                <button class="theme-toggle-btn" id="themeToggleUser" title="Toggle theme"><span class="knob"></span></button>
                 <button class="nav-link" onclick="logout()" style="color:var(--error-text);">Sign out</button>
             </div>
         </div>
@@ -482,6 +482,16 @@
         (function() {
             const theme = localStorage.getItem('theme') || 'light';
             if (theme === 'dark') document.body.classList.add('dark-theme');
+            
+            function toggleHandler() {
+                const isDark = document.body.classList.toggle('dark-theme');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            }
+            const btn1 = document.getElementById('themeToggle');
+            const btn2 = document.getElementById('themeToggleUser');
+            if (btn1) btn1.addEventListener('click', toggleHandler);
+            if (btn2) btn2.addEventListener('click', toggleHandler);
+
             checkAuth();
         })();
     </script>

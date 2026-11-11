@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Locus Copilot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--page-gradient), var(--bg-secondary);
+            font-family: var(--font-sans);
+            background: var(--page-gradient), var(--bg-base);
             background-attachment: fixed;
             color: var(--text-primary);
-            background-color: var(--bg-secondary);
+            background-color: var(--bg-base);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -21,7 +21,7 @@
 
         /* Navbar */
         .navbar {
-            background: rgba(255,252,247,0.85);
+            background: var(--bg-glass);
             border-bottom: 1px solid var(--border-color);
             padding: 0 2.5rem;
             height: 64px;
@@ -77,22 +77,19 @@
         .page-header {
             text-align: center;
             margin-bottom: 3.5rem;
-            opacity: 0;
-            animation: slideInUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
+            animation: slideInUp 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
         }
         .page-header h1 {
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-sans);
             font-size: 2.5rem;
             font-weight: 700;
             letter-spacing: -0.03em;
             margin-bottom: 0.75rem;
+            color: var(--text-primary);
         }
         .page-header h1 em {
             font-style: normal;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent-primary);
         }
         .page-header p {
             color: var(--text-secondary);
@@ -103,8 +100,7 @@
         /* Description */
         .about-section {
             margin-bottom: 3rem;
-            opacity: 0;
-            animation: slideInUp 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
+            animation: slideInUp 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
         }
         .about-section:nth-child(2) { animation-delay: 0.15s; }
         .about-section:nth-child(3) { animation-delay: 0.25s; }
@@ -305,7 +301,6 @@
             <div class="owner-card">
                 <div class="owner-avatar">NN</div>
                 <div class="owner-name">Nandini Sreejit Nair</div>
-                <div class="owner-role">AI & Decision Science Engineer</div>
                 <div class="owner-links">
                     <a class="owner-link link-linkedin" href="https://www.linkedin.com/in/nandini-sreejit-nair/" target="_blank" rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>

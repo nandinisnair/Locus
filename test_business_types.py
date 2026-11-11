@@ -42,16 +42,16 @@ for business_type, business_name in test_cases:
         
         if data.get('success'):
             results = data.get('results', [])
-            print(f'\n{business_name}: ✅ {len(results)} locations found')
+            print(f'\n{business_name}: [PASS] {len(results)} locations found')
             if results:
                 top = results[0]
                 print(f'  Top: {top["name"]} ({top["score_percent"]}%)')
                 types = top['features']['business_types']
                 print(f'  Count: {types.get(business_type, 0)} {business_type} POIs')
         else:
-            print(f'\n{business_name}: ❌ Error')
+            print(f'\n{business_name}: [FAIL] Error')
     except Exception as e:
-        print(f'\n{business_name}: ❌ {str(e)}')
+        print(f'\n{business_name}: [FAIL] {str(e)}')
 
 print("\n" + "=" * 60)
-print("✅ Test complete")
+print("[PASS] Test complete")

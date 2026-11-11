@@ -12,7 +12,8 @@ No opaque machine learning models or black boxes — 100% transparent,
 explainable, and grounded in textbook academic science.
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
+import json
 import math
 import numpy as np
 
@@ -28,7 +29,7 @@ CENTRAL_PLACE_ORDERS = {
     0: {
         "order": 1,
         "name": "Regional Commercial Core / CBD",
-        "icon": "🏛️",
+        "icon": "landmark",
         "color": "#c0392b",
         "theory": "Christaller Order 1 (Highest Order)",
         "description": "High-order durable goods, major retail agglomeration, extensive regional drawing range (e.g. T. Nagar, George Town, Anna Nagar).",
@@ -38,7 +39,7 @@ CENTRAL_PLACE_ORDERS = {
     1: {
         "order": 2,
         "name": "Secondary Commercial Center",
-        "icon": "🏬",
+        "icon": "building",
         "color": "#2980b9",
         "theory": "Christaller Order 2 (Intermediate Order)",
         "description": "High shopping density, professional services, frequent retail destinations (e.g. Adyar, Velachery, KK Nagar).",
@@ -48,7 +49,7 @@ CENTRAL_PLACE_ORDERS = {
     2: {
         "order": 3,
         "name": "Transit-Oriented Node",
-        "icon": "🚇",
+        "icon": "subway",
         "color": "#27ae60",
         "theory": "Transit-Oriented Development (TOD) Node",
         "description": "High multi-modal passenger interchange (Metro + Bus), high footfall throughput and commuter convenience demand.",
@@ -58,7 +59,7 @@ CENTRAL_PLACE_ORDERS = {
     3: {
         "order": 4,
         "name": "Neighborhood Retail Hub",
-        "icon": "🛍️",
+        "icon": "shopping-bag",
         "color": "#e67e22",
         "theory": "Christaller Order 3 (Daily Convenience)",
         "description": "Everyday convenience goods, localized groceries, neighborhood clinics, walk-in services.",
@@ -68,7 +69,7 @@ CENTRAL_PLACE_ORDERS = {
     4: {
         "order": 5,
         "name": "Residential & Emerging Zone",
-        "icon": "🏘️",
+        "icon": "home",
         "color": "#8e44ad",
         "theory": "Periphery / Residential Catchment",
         "description": "Primarily residential community with low commercial density; future expansion and growth frontier.",
@@ -556,7 +557,6 @@ class DecisionScienceEngine:
         for s in user_searches:
             w = s.get("weights")
             if isinstance(w, str):
-                import json
                 try:
                     w = json.loads(w)
                 except Exception:

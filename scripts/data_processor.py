@@ -1,4 +1,4 @@
-﻿"""
+"""
 Data Processor: Aggregates raw OSM data into locality-level features.
 """
 

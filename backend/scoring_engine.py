@@ -1,8 +1,9 @@
 """
-Scoring Engine: Weighted multi-criteria decision algorithm.
-Ranks locations based on user-selected criteria and weights.
+Scoring Engine: Multi-Criteria Decision Analysis (MCDA) for Location Suitability.
 
-Score = sum(weight_i * normalized_value_i)
+Ranks candidate localities within a spatial radius using normalized attributes
+(affordability, crowd density, validated market activity, and transit access)
+combined with business-specific profiles and competition strategies.
 """
 
 from pathlib import Path

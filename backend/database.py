@@ -135,10 +135,10 @@ def init_database():
             VALUES (?, ?, ?, ?, ?)
         """, (admin_email, admin_password_hash, "Admin User", 1, 1))
         conn.commit()
-        print(f"✅ Default admin created for {admin_email}")
+        print(f"[INFO] Default admin created for {admin_email}")
     
     conn.close()
-    print("✅ Database initialized")
+    print("[INFO] Database initialized")
 
 # User functions
 def create_user(email: str, password: str, full_name: str = "") -> dict:

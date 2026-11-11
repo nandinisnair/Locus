@@ -68,18 +68,18 @@ localities_path = BACKEND_DIR / "localities.json"
 try:
     localities_data = load_localities(localities_path)
     scoring_engine = ScoringEngine(localities_data)
-    print("✅ Localities loaded successfully")
+    print("[INFO] Localities loaded successfully")
 except Exception as e:
-    print(f"❌ Error loading localities: {e}")
+    print(f"[ERROR] Error loading localities: {e}")
     localities_data = None
     scoring_engine = None
 
 # Initialize database
 try:
     init_database()
-    print("✅ Database initialized successfully")
+    print("[INFO] Database initialized successfully")
 except Exception as e:
-    print(f"❌ Error initializing database: {e}")
+    print(f"[ERROR] Error initializing database: {e}")
 
 # Initialize Decision Science Engine (AHP + TOPSIS + Huff Gravity + Central Place Theory)
 decision_engine = None
@@ -88,9 +88,9 @@ try:
     if localities_data:
         decision_engine = DecisionScienceEngine(localities_data)
         ml_engine = decision_engine  # Backward compatibility alias
-        print("✅ Decision Science Engine initialized (AHP, TOPSIS, Huff Gravity, Central Place Theory)")
+        print("[INFO] Decision Science Engine initialized (AHP, TOPSIS, Huff Gravity, Central Place Theory)")
 except Exception as e:
-    print(f"⚠️ Decision Science Engine failed to initialize: {e}")
+    print(f"[WARNING] Decision Science Engine failed to initialize: {e}")
     decision_engine = None
     ml_engine = None
 

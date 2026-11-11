@@ -26,7 +26,7 @@ try:
     resp = urllib.request.urlopen(req, timeout=10)
     result = json.loads(resp.read().decode("utf-8"))
     print(json.dumps(result, indent=2))
-    print("\n✅ API working! Got", len(result.get("results", [])), "ranked locations")
+    print("\n[PASS] API working! Got", len(result.get("results", [])), "ranked locations")
 except Exception as e:
-    print("❌ Error:", e)
+    print("[FAIL] Error:", e)
     sys.exit(1)

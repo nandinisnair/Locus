@@ -706,11 +706,9 @@
             return `${window.location.protocol}//${host}:8000/api`;
         })();
 
-        // Map Tile URLs for Light (Positron) & Dark (Dark Matter)
-        const MAP_TILES = {
-            light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-            dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-        };
+        // OpenStreetMap Tile Layer (100% Free & Open, Zero API Key Required)
+        const OSM_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
 
         // ==================== STATE MANAGEMENT ====================
         let localities = [];
@@ -755,11 +753,6 @@
             const label = document.getElementById('themePillLabel');
             if (label) {
                 label.textContent = isDark ? 'Obsidian Glass' : 'Executive Class';
-            }
-
-            // Sync Map Tile Styling
-            if (mapTileLayer && map) {
-                mapTileLayer.setUrl(isDark ? MAP_TILES.dark : MAP_TILES.light);
             }
         }
 
@@ -837,10 +830,9 @@
                 // Add zoom control at top-right
                 L.control.zoom({ position: 'topright' }).addTo(map);
 
-                const isDark = document.body.classList.contains('dark-theme');
-                mapTileLayer = L.tileLayer(isDark ? MAP_TILES.dark : MAP_TILES.light, {
+                mapTileLayer = L.tileLayer(OSM_TILE_URL, {
                     maxZoom: 19,
-                    attribution: '&copy; CARTO'
+                    attribution: OSM_ATTRIBUTION
                 }).addTo(map);
             }
             return map;
